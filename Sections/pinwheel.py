@@ -1,76 +1,97 @@
 import streamlit as st
+from graphviz import Digraph
 
 
 def render():
 
     st.title("Pinwheel Integration")
 
-    # ---------------------------------------------------
-    # 1️⃣ WHAT IS PINWHEEL
-    # ---------------------------------------------------
-    st.header("1. What is Pinwheel?")
-
     st.markdown("""
-Pinwheel is used in the FI flow to:
-
-- Verify employer information  
-- Validate income data  
-- Link payroll account  
-- Enable destination account creation  
-- Trigger eligibility refresh in ModelShop  
-
-In short, Pinwheel enables verified payroll connectivity required for EWA.
+Pinwheel enables payroll connectivity and verified income validation
+required for FI eligibility and EWA disbursement.
     """)
 
     st.divider()
 
-    # ---------------------------------------------------
-    # 2️⃣ USER FLOW
-    # ---------------------------------------------------
-    st.header("2. User Flow")
+    # =====================================================
+    # 1️⃣ USER FLOW
+    # =====================================================
+    st.header("1. User Flow")
 
-    user_flow = """
-    digraph {
-        rankdir=LR;
-        node [shape=box, style=rounded];
+    user_flow = Digraph()
+    user_flow.attr(rankdir='LR')
+    user_flow.attr('node', shape='box', style='rounded')
 
-        User -> "Open EWA";
-        "Open EWA" -> "Launch Pinwheel Widget";
-        "Launch Pinwheel Widget" -> "Select Employer";
-        "Select Employer" -> "Authenticate Payroll";
-        "Authenticate Payroll" -> "Payroll Verified";
-        "Payroll Verified" -> "Account Linked";
-        "Account Linked" -> "Eligibility Refreshed";
-    }
-    """
+    user_flow.node("User")
+    user_flow.node("FE", "Veep FE")
+    user_flow.node("Widget", "Pinwheel Widget")
+    user_flow.node("Employer", "Select Employer")
+    user_flow.node("Auth", "Authenticate Payroll")
+    user_flow.node("Verify", "Income Verified")
+    user_flow.node("Linked", "Account Linked")
+    user_flow.node("Eligible", "Eligibility Recalculated")
+
+    user_flow.edge("User", "FE")
+    user_flow.edge("FE", "Widget")
+    user_flow.edge("Widget", "Employer")
+    user_flow.edge("Employer", "Auth")
+    user_flow.edge("Auth", "Verify")
+    user_flow.edge("Verify", "Linked")
+    user_flow.edge("Linked", "Eligible")
 
     st.graphviz_chart(user_flow)
 
     st.divider()
 
-    # ---------------------------------------------------
-    # 3️⃣ SYSTEM DIAGRAM
-    # ---------------------------------------------------
-    st.header("3. System Architecture (FE / BFF / BE / Model)")
+    # =====================================================
+    # 2️⃣ SYSTEM ARCHITECTURE DIAGRAM
+    # =====================================================
+    st.header("2. System Architecture (FE / BFF / BE / Model)")
 
-    system_diagram = """
-    digraph {
-        rankdir=LR;
+    system = Digraph()
+    system.attr(rankdir='LR')
 
-        node [shape=box];
+    # External
+    system.node("User", shape="oval")
 
-        User -> FE;
-        FE -> "Pinwheel Widget";
-        "Pinwheel Widget" -> "Pinwheel API";
+    # FE Cluster
+    with system.subgraph(name="cluster_fe") as fe:
+        fe.attr(label="Frontend")
+        fe.node("FE", "Veep FE")
+        fe.node("Widget", "Pinwheel Widget")
 
-        "Pinwheel API" -> BE;
-        BE -> "Member Enrichment";
-        "Member Enrichment" -> "Destination Account Creation";
-        "Destination Account Creation" -> Model;
-        Model -> FE;
+    # Pinwheel Cluster
+    with system.subgraph(name="cluster_pinwheel") as pw:
+        pw.attr(label="Pinwheel")
+        pw.node("API", "Pinwheel API")
+        pw.node("EmployerData", "Employer Data")
+        pw.node("Income", "Income Verification")
 
-        "Pinwheel API" -> "Employer Not Found" [style=dashed];
-    }
-    """
+    # Backend Cluster
+    with system.subgraph(name="cluster_be") as be:
+        be.attr(label="Veep Backend")
+        be.node("Enrich", "Member Enrichment")
+        be.node("Destination", "Destination Account Creation")
 
-    st.graphviz_chart(system_diagram)
+    # Model Cluster
+    with system.subgraph(name="cluster_model") as model:
+        model.attr(label="ModelShop")
+        model.node("Eligibility", "Eligibility Recalculation")
+
+    # Edges
+    system.edge("User", "FE")
+    system.edge("FE", "Widget")
+    system.edge("Widget", "API")
+
+    system.edge("API", "EmployerData")
+    system.edge("EmployerData", "Income")
+
+    system.edge("Income", "Enrich")
+    system.edge("Enrich", "Destination")
+    system.edge("Destination", "Eligibility")
+
+    # Edge Case
+    system.node("EdgeCase", "Employer Not Found\n(Phase 2)", shape="box", style="dashed")
+    system.edge("API", "EdgeCase", style="dashed")
+
+    st.graphviz_chart(system)
