@@ -18,15 +18,16 @@ def render():
 
     h1 { margin-bottom: 12px !important; }
     h3 { margin-top: 8px !important; margin-bottom: 8px !important; }
+
     </style>
     """, unsafe_allow_html=True)
 
     st.title("Pinwheel Integration")
 
     # =====================================================
-    # INFO CARD WITH DESCRIPTIONS
+    # INFO CARD (WITH DESCRIPTIONS)
     # =====================================================
-  st.markdown("""
+    st.markdown("""
     <div style="
         border:1px solid #e5e5e5;
         border-radius:10px;
@@ -56,43 +57,7 @@ def render():
             </div>
 
             <div>
-                <div>🏦 <b>Destination Account</b></div>
-                <div style="color:#555;">Creates verified payout account</div>
-            </div>
-
-            <div>
-                <div>📊 <b>Eligibility Refresh</b></div>
-                <div style="color:#555;">Triggers Model recalculation</div>
-            </div>
-
-            <div>
-                <div>⚠️ <b>Risk Tier Adjustment</b></div>
-                <div style="color:#555;">Applied on early widget exit</div>
-            </div>
-
-        </div>
-    </div>
-""", unsafe_allow_html=True)
-
-        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; font-size:13px;">
-
-            <div>
-                <div>🏢 <b>Employer Verification</b></div>
-                <div style="color:#555;">Confirms active payroll relationship</div>
-            </div>
-
-            <div>
-                <div>💰 <b>Income Validation</b></div>
-                <div style="color:#555;">Retrieves verified compensation data</div>
-            </div>
-
-            <div>
-                <div>🧩 <b>Member Enrichment</b></div>
-                <div style="color:#555;">Updates internal profile attributes</div>
-            </div>
-
-            <div>
-                <div>🏦 <b>Destination Account</b></div>
+                <div>🏦 <b>Destination Account Creation</b></div>
                 <div style="color:#555;">Creates verified payout account</div>
             </div>
 
@@ -111,7 +76,7 @@ def render():
     """, unsafe_allow_html=True)
 
     # =====================================================
-    # HAPPY PATH FLOW
+    # 1️⃣ USER FLOW — HAPPY PATH
     # =====================================================
     st.markdown("### 1. User Flow — Happy Path")
 
@@ -136,7 +101,7 @@ flowchart LR
     render_mermaid(happy_flow)
 
     # =====================================================
-    # EXIT FLOW
+    # 2️⃣ EXIT FLOW
     # =====================================================
     st.markdown("### 2. Exit Anytime Flow — Risk Impact")
 
@@ -159,7 +124,7 @@ flowchart LR
     render_mermaid(exit_flow)
 
     # =====================================================
-    # SEQUENCE DIAGRAM (CLEAN THEME)
+    # 3️⃣ SEQUENCE DIAGRAM
     # =====================================================
     st.markdown("### 3. Pinwheel Integration — Sequence Diagram")
 
@@ -196,7 +161,7 @@ sequenceDiagram
 
 
 # --------------------------------------------------
-# CLEAN MERMAID RENDERER
+# MERMAID RENDERER (CLEAN THEME)
 # --------------------------------------------------
 def render_mermaid(code: str):
 
