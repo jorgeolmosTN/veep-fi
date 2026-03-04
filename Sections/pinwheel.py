@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 def render():
 
     # --------------------------------------------------
-    # GLOBAL COMPACT STYLING
+    # COMPACT GLOBAL STYLE
     # --------------------------------------------------
     st.markdown("""
     <style>
@@ -30,7 +30,7 @@ def render():
     .diagram-box {
         border: 1px solid #e5e5e5;
         border-radius: 8px;
-        padding: 10px;
+        padding: 12px;
         background-color: #fafafa;
     }
     </style>
@@ -58,40 +58,57 @@ def render():
     """, unsafe_allow_html=True)
 
     # =====================================================
-    # 1️⃣ USER FLOW
+    # 1️⃣ USER FLOW — HAPPY PATH
     # =====================================================
     st.markdown('<div class="section-frame">', unsafe_allow_html=True)
     st.markdown("### 1. User Flow — Happy Path")
 
     user_flow = """
 flowchart LR
-    User((User)) --> FE["Veep FE"]
-    FE --> Widget["Pinwheel Widget"]
-    Widget --> Employer["Select Employer"]
-    Employer --> Auth["Authenticate Payroll"]
-    Auth --> Income["Income Verified"]
-    Income --> Linked["Account Linked"]
-    Linked --> Eligible["Eligibility Recalculated"]
+
+    classDef user fill:#dbeafe,stroke:#2563eb,stroke-width:1px,color:#1e3a8a;
+    classDef process fill:#f3f4f6,stroke:#6b7280,stroke-width:1px,color:#111827;
+    classDef final fill:#dcfce7,stroke:#16a34a,stroke-width:1px,color:#14532d;
+
+    User((User)):::user
+    FE["Veep FE"]:::process
+    Widget["Pinwheel Widget"]:::process
+    Employer["Select Employer"]:::process
+    Auth["Authenticate Payroll"]:::process
+    Income["Income Verified"]:::process
+    Linked["Account Linked"]:::process
+    Eligible["Eligibility Recalculated"]:::final
+
+    User --> FE --> Widget --> Employer --> Auth --> Income --> Linked --> Eligible
 """
 
-    render_mermaid(user_flow, 280)
+    render_mermaid(user_flow, 300)
     st.markdown('</div>', unsafe_allow_html=True)
 
     # =====================================================
-    # 2️⃣ EXIT FLOW
+    # 2️⃣ EXIT ANYTIME FLOW — FIXED SEQUENCE
     # =====================================================
     st.markdown('<div class="section-frame">', unsafe_allow_html=True)
     st.markdown("### 2. Exit Anytime Flow — Risk Impact")
 
     exit_flow = """
 flowchart LR
-    User((User)) --> Widget["Pinwheel Widget"]
-    Widget --> Exit["Exit Anytime"]
-    Exit --> Dashboard["Return to Dashboard"]
-    Dashboard --> Tier["Tier Reduction in Risk Score"]
+
+    classDef user fill:#dbeafe,stroke:#2563eb,stroke-width:1px,color:#1e3a8a;
+    classDef process fill:#f3f4f6,stroke:#6b7280,stroke-width:1px,color:#111827;
+    classDef risk fill:#fee2e2,stroke:#dc2626,stroke-width:1px,color:#7f1d1d;
+
+    User((User)):::user
+    FE["Veep FE"]:::process
+    Widget["Pinwheel Widget"]:::process
+    Exit["Exit Anytime"]:::process
+    Dashboard["Return to Dashboard"]:::process
+    Tier["Tier Reduction in Risk Score"]:::risk
+
+    User --> FE --> Widget --> Exit --> Dashboard --> Tier
 """
 
-    render_mermaid(exit_flow, 220)
+    render_mermaid(exit_flow, 260)
     st.markdown('</div>', unsafe_allow_html=True)
 
     # =====================================================
@@ -134,7 +151,7 @@ sequenceDiagram
 
 
 # --------------------------------------------------
-# MERMAID RENDERER (Compact)
+# MERMAID RENDERER
 # --------------------------------------------------
 def render_mermaid(code: str, height: int):
     components.html(
