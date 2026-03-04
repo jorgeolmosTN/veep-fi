@@ -2,7 +2,7 @@ import streamlit as st
 
 def render_landing():
     # REEMPLAZA ESTE LINK POR TU LINK RAW DE GITHUB
-    IMG_URL = "https://raw.githubusercontent.com/tu_usuario/tu_repo/main/assets/fondo.png"
+    IMG_URL = "https://github.com/jorgeolmosTN/veep-fi/blob/54dde2321cfd3d562f7dc1b984d5a98da7fdd38f/assets/image_44a13a.png"
 
     st.markdown(f"""
         <style>
