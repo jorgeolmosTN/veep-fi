@@ -25,6 +25,11 @@ footer {visibility: hidden;}
 .stApp {
     background-color: #dcdcdc;
 }
+
+/* Remove password eye icon */
+button[aria-label="Show password"] {
+    display: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -34,7 +39,6 @@ footer {visibility: hidden;}
 # ---------------------------------------------------
 def login_screen():
 
-    # Vertical spacing
     st.markdown("<div style='height:30vh'></div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([3,2,3])
@@ -43,7 +47,7 @@ def login_screen():
         username = st.text_input("", placeholder="User")
         password = st.text_input("", type="password", placeholder="Password")
 
-        if st.button("Enter", use_container_width=True):
+        if st.button(".-", use_container_width=True):
             if username == "veep" and password == "fi2026":
                 st.session_state.authenticated = True
                 st.rerun()
