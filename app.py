@@ -1,9 +1,6 @@
 import streamlit as st
 from Sections import pinwheel
 
-# ---------------------------------------------------
-# PAGE CONFIG
-# ---------------------------------------------------
 st.set_page_config(layout="wide")
 
 # ---------------------------------------------------
@@ -17,7 +14,7 @@ if "page" not in st.session_state:
 
 
 # ---------------------------------------------------
-# GLOBAL STYLE
+# BASIC STYLE ONLY (NO NAV HTML)
 # ---------------------------------------------------
 st.markdown("""
 <style>
@@ -28,41 +25,6 @@ footer {visibility: hidden;}
 
 .stApp {
     background-color: #dcdcdc;
-}
-
-/* Top navigation bar */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #555;
-    display: flex;
-    align-items: center;
-    padding-left: 40px;
-    height: 55px;
-    z-index: 9999;
-}
-
-/* Nav button styling */
-.nav-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 14px;
-    margin-right: 40px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.nav-btn:hover {
-    font-size: 16px;
-}
-
-/* Push content below navbar */
-.page-content {
-    margin-top: 70px;
-    padding: 40px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -91,23 +53,19 @@ def login_screen():
 
 
 # ---------------------------------------------------
-# NAVIGATION BAR (PURE STREAMLIT)
+# NAVIGATION (PURE STREAMLIT)
 # ---------------------------------------------------
 def render_navbar():
 
-    st.markdown('<div class="navbar">', unsafe_allow_html=True)
+    nav_col1, nav_col2 = st.columns(2)
 
-    col1, col2, col3 = st.columns([1,1,8])
-
-    with col1:
-        if st.button("Overview", key="nav_overview"):
+    with nav_col1:
+        if st.button("Overview", use_container_width=True):
             st.session_state.page = "overview"
 
-    with col2:
-        if st.button("Pinwheel", key="nav_pinwheel"):
+    with nav_col2:
+        if st.button("Pinwheel", use_container_width=True):
             st.session_state.page = "pinwheel"
-
-    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ---------------------------------------------------
@@ -117,18 +75,13 @@ def main_app():
 
     render_navbar()
 
-    st.markdown('<div class="page-content">', unsafe_allow_html=True)
+    st.markdown("---")
 
     if st.session_state.page == "overview":
         st.title("FI Overview")
 
     elif st.session_state.page == "pinwheel":
         pinwheel.render()
-
-    else:
-        st.title("FI Overview")
-
-    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ---------------------------------------------------
