@@ -12,14 +12,14 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 # ---------------------------------------------------
-# GLOBAL STYLE (REMOVE STREAMLIT UI)
+# GLOBAL RESET
 # ---------------------------------------------------
 st.markdown("""
 <style>
 header {visibility: hidden;}
 footer {visibility: hidden;}
 #MainMenu {visibility: hidden;}
-.block-container {padding: 0rem !important;}
+.block-container {padding: 0 !important;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -29,71 +29,81 @@ footer {visibility: hidden;}
 # ---------------------------------------------------
 def login_screen():
 
-    # Full background gradient
     st.markdown("""
     <style>
+
+    /* Premium soft gradient background */
     .stApp {
-        background: linear-gradient(135deg, #e4e4e4, #c9c9c9);
+        background: radial-gradient(circle at top left, #f2f2f2, #d9d9d9);
+        height: 100vh;
     }
 
-    /* Center container vertically */
-    .center-container {
-        height: 100vh;
+    /* Center container */
+    .login-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 100vh;
     }
 
-    /* Input styling */
+    /* Glass card */
+    .login-card {
+        width: 320px;
+        padding: 50px 40px;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.55);
+        backdrop-filter: blur(18px);
+    }
+
+    /* Remove default input styling */
     div[data-baseweb="input"] {
-        max-width: 260px;
-        margin: auto;
+        margin-bottom: 28px;
     }
 
     div[data-baseweb="input"] > div {
-        border-radius: 6px !important;
-        border: 1px solid #999 !important;
-        background-color: white !important;
+        border: none !important;
+        border-bottom: 1px solid #aaa !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        transition: all 0.3s ease;
+    }
+
+    div[data-baseweb="input"] > div:focus-within {
+        border-bottom: 1px solid black !important;
     }
 
     input {
+        background: transparent !important;
         text-align: center;
-        font-size: 13px !important;
+        font-size: 14px !important;
+        padding: 6px !important;
     }
 
-    /* Button styling */
+    /* Hide password reveal icon background */
+    button[aria-label="Show password"] {
+        background: transparent !important;
+    }
+
+    /* Hide button completely (we'll still use it logically) */
     .stButton > button {
-        width: 260px;
-        border-radius: 6px;
-        background-color: black;
-        color: white;
-        border: none;
-        padding: 8px;
-        font-size: 13px;
-    }
-
-    .stButton > button:hover {
-        background-color: #222;
+        display: none;
     }
 
     </style>
     """, unsafe_allow_html=True)
 
-    # Use columns to center content
-    left, center, right = st.columns([3,2,3])
+    st.markdown('<div class="login-wrapper"><div class="login-card">', unsafe_allow_html=True)
 
-    with center:
-        st.markdown("<div style='height:25vh'></div>", unsafe_allow_html=True)
+    username = st.text_input("", key="username")
+    password = st.text_input("", type="password", key="password")
 
-        username = st.text_input("", key="username")
-        password = st.text_input("", type="password", key="password")
+    # Hidden button for Enter trigger
+    if st.button("Login"):
+        if username == "veep" and password == "fi2026":
+            st.session_state.authenticated = True
+            st.rerun()
 
-        if st.button("Enter"):
-            if username == "veep" and password == "fi2026":
-                st.session_state.authenticated = True
-                st.rerun()
-            else:
-                st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+    st.markdown('</div></div>', unsafe_allow_html=True)
 
 
 # ---------------------------------------------------
