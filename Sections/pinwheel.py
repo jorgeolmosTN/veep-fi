@@ -12,19 +12,19 @@ def render():
     .block-container {
         padding-left: 4rem !important;
         padding-right: 4rem !important;
-        padding-top: 0.5rem !important;
-        padding-bottom: 0.5rem !important;
+        padding-top: 0.3rem !important;
+        padding-bottom: 0.3rem !important;
     }
 
-    h1 { margin-bottom: 10px !important; }
-    h3 { margin-top: 8px !important; margin-bottom: 8px !important; }
+    h1 { margin-bottom: 8px !important; }
+    h3 { margin-top: 8px !important; margin-bottom: 4px !important; }
     </style>
     """, unsafe_allow_html=True)
 
     st.title("Pinwheel Integration")
 
     # =====================================================
-    # INFO SECTION (CLEAN — NO RAW HTML GRID)
+    # INFO SECTION
     # =====================================================
 
     st.markdown("### What Pinwheel Enables")
@@ -72,12 +72,12 @@ flowchart LR
     Auth["Authenticate Payroll"]:::process
     Income["Income Verified"]:::process
     Linked["Account Linked"]:::process
-    Eligible["Eligibility Recalculated"]:::final
+    Final["Advance Availability Status"]:::final
 
-    User --> FE --> Widget --> Employer --> Auth --> Income --> Linked --> Eligible
+    User --> FE --> Widget --> Employer --> Auth --> Income --> Linked --> Final
 """
 
-    render_mermaid(happy_flow)
+    render_mermaid(happy_flow, height=260)
 
     # =====================================================
     # 2️⃣ EXIT FLOW
@@ -100,7 +100,7 @@ flowchart LR
     User --> FE --> Widget --> Exit --> Dashboard --> Tier
 """
 
-    render_mermaid(exit_flow)
+    render_mermaid(exit_flow, height=230)
 
     # =====================================================
     # 3️⃣ SEQUENCE DIAGRAM
@@ -125,8 +125,8 @@ sequenceDiagram
         BE->>BE: Member Enrichment
         BE->>BE: Create Destination Account
         BE->>Model: Trigger Eligibility Refresh
-        Model-->>BE: Eligibility Updated
-        BE-->>FE: Eligibility Confirmed
+        Model-->>BE: Advance Availability Updated
+        BE-->>FE: Status Confirmed
     else Employer Not Found
         PW-->>FE: Employer Not Found
     else Exit Anytime
@@ -136,13 +136,13 @@ sequenceDiagram
     end
 """
 
-    render_mermaid(sequence)
+    render_mermaid(sequence, height=600)
 
 
 # --------------------------------------------------
 # CLEAN MERMAID RENDERER
 # --------------------------------------------------
-def render_mermaid(code: str):
+def render_mermaid(code: str, height: int):
 
     components.html(
         f"""
@@ -151,7 +151,7 @@ def render_mermaid(code: str):
             border-radius:10px;
             padding:16px;
             background:#ffffff;
-            margin-bottom:20px;
+            margin-bottom:16px;
         ">
             <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
             <div class="mermaid">
@@ -170,6 +170,6 @@ def render_mermaid(code: str):
             mermaid.initialize({{ startOnLoad: true }});
         </script>
         """,
-        height=420,
+        height=height,
         scrolling=False
     )
