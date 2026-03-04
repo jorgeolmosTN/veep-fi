@@ -11,7 +11,6 @@ st.set_page_config(layout="wide")
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
-
 # ---------------------------------------------------
 # GLOBAL STYLE
 # ---------------------------------------------------
@@ -26,56 +25,44 @@ footer {visibility: hidden;}
     background-color: #dcdcdc;
 }
 
-/* Remove password eye icon */
-button[aria-label="Show password"] {
+/* Remove extra spacing between inputs */
+div[data-testid="stTextInput"] {
+    margin-bottom: 8px !important;
+}
+
+/* Remove password eye icon completely */
+button[kind="secondary"] {
+    display: none !important;
+}
+button[aria-label] {
     display: none !important;
 }
 </style>
 """, unsafe_allow_html=True)
-
 
 # ---------------------------------------------------
 # LOGIN SCREEN
 # ---------------------------------------------------
 def login_screen():
 
-    st.markdown("<div style='height:30vh'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:32vh'></div>", unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([3,2,3])
+    left, center, right = st.columns([3,2,3])
 
-    with col2:
-        username = st.text_input("", placeholder="User")
-        password = st.text_input("", type="password", placeholder="Password")
+    with center:
+        username = st.text_input("", placeholder="User", label_visibility="collapsed")
+        password = st.text_input("", type="password", placeholder="Password", label_visibility="collapsed")
 
-        if st.button(".-", use_container_width=True):
+        if st.button("Login", use_container_width=True):
             if username == "veep" and password == "fi2026":
                 st.session_state.authenticated = True
                 st.rerun()
-
 
 # ---------------------------------------------------
 # MAIN APP
 # ---------------------------------------------------
 def main_app():
-
-    tabs = st.tabs([
-        "Overview",
-        "EWA Request",
-        "Eligibility",
-        "Advance Creation",
-        "Pinwheel",
-        "Connective",
-        "Q2",
-        "Nudge",
-        "Repayment – No Funds",
-        "Repayment – Uncollectable",
-        "Employer Missing",
-        "Full Architecture"
-    ])
-
-    with tabs[0]:
-        st.title("FI Overview")
-
+    st.title("FI Overview")
 
 # ---------------------------------------------------
 # ROUTER
