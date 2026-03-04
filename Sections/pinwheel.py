@@ -19,15 +19,22 @@ required for FI eligibility and EWA disbursement.
     st.header("1. User Flow")
 
     user_flow = """
-    flowchart LR
-        User --> FE["Veep FE"]
-        FE --> Widget["Pinwheel Widget"]
-        Widget --> Employer["Select Employer"]
-        Employer --> Auth["Authenticate Payroll"]
-        Auth --> Income["Income Verified"]
-        Income --> Linked["Account Linked"]
-        Linked --> Eligible["Eligibility Recalculated"]
-    """
+flowchart LR
+
+    User --> FE["Veep FE"]
+    FE --> Widget["Pinwheel Widget"]
+
+    Widget --> Employer["Select Employer"]
+    Employer --> Auth["Authenticate Payroll"]
+    Auth --> Income["Income Verified"]
+    Income --> Linked["Account Linked"]
+    Linked --> Eligible["Eligibility Recalculated"]
+
+    %% Exit Anytime Path
+    Widget -.-> Exit["Exit Anytime"]
+    Exit --> Dashboard["EWA Dashboard"]
+    Dashboard --> Tier["Tier Reduction in Risk Score"]
+"""
 
     render_mermaid(user_flow)
 
