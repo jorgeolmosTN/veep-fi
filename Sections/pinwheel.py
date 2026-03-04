@@ -5,118 +5,78 @@ import streamlit.components.v1 as components
 def render():
 
     # --------------------------------------------------
-    # PAGE SPACING CONTROL
+    # PAGE SPACING CONTROL (VERY TIGHT TOP)
     # --------------------------------------------------
     st.markdown("""
     <style>
     .block-container {
+        padding-top: 0.05rem !important;
+        padding-bottom: 0.2rem !important;
         padding-left: 4rem !important;
         padding-right: 4rem !important;
-        padding-top: 0.2rem !important;
-        padding-bottom: 0.2rem !important;
     }
 
     h2 {
         margin-top: 0px !important;
-        margin-bottom: 8px !important;
-        font-size: 40px;
+        margin-bottom: 6px !important;
+        font-size: 38px;
         font-weight: 700;
     }
 
     h3 {
         margin-top: 12px !important;
-        margin-bottom: 6px !important;
+        margin-bottom: 4px !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    # --------------------------------------------------
-    # TITLE (Controlled — No Giant Margin)
-    # --------------------------------------------------
     st.markdown("<h2>Pinwheel Integration</h2>", unsafe_allow_html=True)
 
     # =====================================================
-    # INFO SECTION
+    # USER FLOW (UPDATED WITH DECISION + MULTI PATHS)
     # =====================================================
-    st.markdown("### What Pinwheel Enables")
+    st.markdown("### 1. User Flow — Decision Based")
 
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.markdown("🏢 **Employer Verification**")
-        st.caption("Confirms active payroll relationship")
-
-        st.markdown("🏦 **Destination Account Creation**")
-        st.caption("Creates verified payout account")
-
-    with col2:
-        st.markdown("💰 **Income Validation**")
-        st.caption("Retrieves verified compensation data")
-
-        st.markdown("📊 **Eligibility Refresh**")
-        st.caption("Triggers Model recalculation")
-
-    with col3:
-        st.markdown("🧩 **Member Enrichment**")
-        st.caption("Updates internal profile attributes")
-
-        st.markdown("⚠️ **Risk Tier Adjustment**")
-        st.caption("Applied on early widget exit")
-
-    st.markdown("---")
-
-    # =====================================================
-    # 1️⃣ HAPPY PATH
-    # =====================================================
-    st.markdown("### 1. User Flow — Happy Path")
-
-    happy_flow = """
+    user_flow = """
 flowchart LR
-    classDef user fill:#e0f2fe,stroke:#0284c7,color:#075985;
-    classDef process fill:#f3f4f6,stroke:#6b7280,color:#111827;
-    classDef final fill:#dcfce7,stroke:#16a34a,color:#14532d;
 
-    User((User)):::user
-    FE["Veep FE"]:::process
-    Widget["Pinwheel Widget"]:::process
-    Employer["Select Employer"]:::process
-    Auth["Authenticate Payroll"]:::process
-    Income["Income Verified"]:::process
-    Linked["Account Linked"]:::process
-    Final["Advance Availability Status"]:::final
+    classDef userStage fill:#f3f4f6,stroke:#6b7280,color:#111827;
+    classDef decision fill:#fff7ed,stroke:#ea580c,color:#7c2d12;
+    classDef final fill:#fee2e2,stroke:#dc2626,color:#7f1d1d;
+    classDef model fill:#ede9fe,stroke:#7c3aed,color:#4c1d95;
 
-    User --> FE --> Widget --> Employer --> Auth --> Income --> Linked --> Final
+    Access["Access to Veep"]:::userStage
+    BE["Veep BE"]:::userStage
+    Decision{"Employer Verification Status?"}:::decision
+
+    Pinwheel["Pinwheel Widget"]:::userStage
+    Select["Select Employer"]:::userStage
+    Auth["Auth Payroll"]:::userStage
+    Income["Income Verification"]:::userStage
+    Linked["Account Linked"]:::userStage
+    Return["Return to Dashboard"]:::userStage
+
+    Advance["Advance Availability Status"]:::final
+    ModelStatus["Model Status: Do Not Request Pinwheel"]:::model
+
+    Access --> BE
+    BE --> Decision
+
+    Decision -- "Request Pinwheel" --> Pinwheel
+    Decision -- "Do Not Request" --> ModelStatus
+
+    Pinwheel --> Select --> Auth --> Income --> Linked --> Return
+
+    Linked --> Advance
+    Linked --> ModelStatus
 """
 
-    render_mermaid(happy_flow, height=260)
+    render_mermaid(user_flow, height=420)
 
     # =====================================================
-    # 2️⃣ EXIT FLOW
+    # SEQUENCE DIAGRAM (UNCHANGED LOGIC)
     # =====================================================
-    st.markdown("### 2. Exit Anytime Flow — Risk Impact")
-
-    exit_flow = """
-flowchart LR
-    classDef user fill:#e0f2fe,stroke:#0284c7,color:#075985;
-    classDef process fill:#f3f4f6,stroke:#6b7280,color:#111827;
-    classDef risk fill:#fee2e2,stroke:#dc2626,color:#7f1d1d;
-
-    User((User)):::user
-    FE["Veep FE"]:::process
-    Widget["Pinwheel Widget"]:::process
-    Exit["Exit Anytime"]:::process
-    Dashboard["Return to Dashboard"]:::process
-    Tier["Tier Reduction in Risk Score"]:::risk
-
-    User --> FE --> Widget --> Exit --> Dashboard --> Tier
-"""
-
-    render_mermaid(exit_flow, height=230)
-
-    # =====================================================
-    # 3️⃣ SEQUENCE DIAGRAM (BIG HEIGHT)
-    # =====================================================
-    st.markdown("### 3. Pinwheel Integration — Sequence Diagram")
+    st.markdown("### 2. Pinwheel Integration — Sequence Diagram")
 
     sequence = """
 sequenceDiagram
@@ -126,28 +86,25 @@ sequenceDiagram
     participant PW as Pinwheel
     participant Model
 
-    User->>FE: Open EWA
-    FE->>PW: Launch Widget
+    User->>FE: Access Veep
+    FE->>BE: Check Employer Verification Status
+    BE->>BE: Evaluate Status
 
-    alt Happy Path
-        User->>PW: Select Employer
-        PW-->>FE: Return Income + Employer Data
+    alt Request Pinwheel
+        BE-->>FE: Launch Pinwheel
+        FE->>PW: Open Widget
+        User->>PW: Select Employer & Authenticate
+        PW-->>FE: Return Income Data
         FE->>BE: Send Payroll Data
-        BE->>BE: Member Enrichment
-        BE->>BE: Create Destination Account
-        BE->>Model: Trigger Eligibility Refresh
-        Model-->>BE: Advance Availability Updated
-        BE-->>FE: Status Confirmed
-    else Employer Not Found
-        PW-->>FE: Employer Not Found
-    else Exit Anytime
-        User->>FE: Exit Pinwheel
-        FE->>BE: Flag Early Exit
-        BE->>Model: Apply Tier Reduction
+        BE->>Model: Update Advance Availability
+        Model-->>BE: Status Updated
+    else Do Not Request
+        BE-->>FE: Do Not Launch Widget
+        BE->>Model: Maintain Current Status
     end
 """
 
-    render_mermaid(sequence, height=700)
+    render_mermaid(sequence, height=650)
 
 
 # --------------------------------------------------
