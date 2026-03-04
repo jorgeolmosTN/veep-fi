@@ -4,26 +4,53 @@ import streamlit.components.v1 as components
 
 def render():
 
+    # -----------------------------------
+    # PAGE PADDING (Left / Right)
+    # -----------------------------------
+    st.markdown("""
+    <style>
+    .block-container {
+        padding-left: 4rem !important;
+        padding-right: 4rem !important;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     st.title("Pinwheel Integration")
 
+    # =====================================================
+    # TOP EXPLANATION CARD (Graphical)
+    # =====================================================
+
     st.markdown("""
-Pinwheel enables payroll connectivity and verified income validation
-required for FI eligibility and EWA disbursement.
-
-It supports:
-- Employer verification
-- Income validation
-- Member enrichment
-- Destination account creation
-- Eligibility recalculation
-- Risk-tier adjustments on early exit
-""")
-
-    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    <div style="
+        background:#f7f7f7;
+        border:1px solid #e5e5e5;
+        border-radius:10px;
+        padding:20px 25px;
+        margin-top:10px;
+        margin-bottom:20px;
+    ">
+        <div style="font-size:16px; font-weight:600; margin-bottom:12px;">
+            What Pinwheel Enables
+        </div>
+        <div style="display:flex; gap:40px; flex-wrap:wrap; font-size:14px;">
+            <div>🏢 Employer Verification</div>
+            <div>💰 Income Validation</div>
+            <div>🧩 Member Enrichment</div>
+            <div>🏦 Destination Account Creation</div>
+            <div>📊 Eligibility Recalculation</div>
+            <div>⚠️ Risk Tier Adjustment</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     # =====================================================
     # 1️⃣ USER FLOW — HAPPY PATH
     # =====================================================
+
     st.markdown("### 1. User Flow — Happy Path")
 
     user_flow = """
@@ -44,13 +71,15 @@ flowchart LR
     User --> FE --> Widget --> Employer --> Auth --> Income --> Linked --> Eligible
 """
 
-    render_boxed_mermaid(user_flow, height=380)
+    render_boxed_mermaid(user_flow, height=340)
 
-    st.markdown("<div style='height:25px'></div>", unsafe_allow_html=True)
+    # Minimal spacing
+    st.markdown("<div style='height:15px'></div>", unsafe_allow_html=True)
 
     # =====================================================
-    # 2️⃣ EXIT ANYTIME FLOW — RISK IMPACT
+    # 2️⃣ EXIT ANYTIME FLOW
     # =====================================================
+
     st.markdown("### 2. Exit Anytime Flow — Risk Impact")
 
     exit_flow = """
@@ -69,13 +98,14 @@ flowchart LR
     User --> Widget --> Exit --> Dashboard --> Tier
 """
 
-    render_boxed_mermaid(exit_flow, height=300)
+    render_boxed_mermaid(exit_flow, height=260)
 
-    st.markdown("<div style='height:25px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:15px'></div>", unsafe_allow_html=True)
 
     # =====================================================
-    # 3️⃣ SEQUENCE DIAGRAM — ENTERPRISE VIEW
+    # 3️⃣ SEQUENCE DIAGRAM
     # =====================================================
+
     st.markdown("### 3. Pinwheel Integration — Sequence Diagram")
 
     sequence_diagram = """
@@ -93,7 +123,7 @@ sequenceDiagram
         U->>PW: Select Employer
         PW->>PW: Authenticate Payroll
         PW->>FE: Return Income + Employer Data
-        FE->>BE: Send verified payroll data
+        FE->>BE: Send Verified Payroll Data
         BE->>BE: Member Enrichment
         BE->>BE: Create Destination Account
         BE->>M: Trigger Eligibility Refresh
@@ -105,37 +135,37 @@ sequenceDiagram
         FE-->>U: Display Phase 2 Handling
     else Exit Anytime
         U->>FE: Exit Pinwheel
-        FE-->>U: Return to EWA Dashboard
+        FE-->>U: Return to Dashboard
         FE->>BE: Flag Early Exit
         BE->>M: Apply Tier Reduction
         M-->>BE: Risk Tier Updated
     end
 """
 
-    render_boxed_mermaid(sequence_diagram, height=550)
+    render_boxed_mermaid(sequence_diagram, height=500)
 
 
 # =====================================================
-# PROFESSIONAL BOXED MERMAID RENDERER
+# PROFESSIONAL MERMAID BOX
 # =====================================================
-def render_boxed_mermaid(code: str, height: int = 400):
+def render_boxed_mermaid(code: str, height: int = 350):
     components.html(
         f"""
 <style>
 .diagram-box {{
-    background-color: #f8f8f8;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 5px;
+    background-color:#fafafa;
+    border:1px solid #e6e6e6;
+    border-radius:8px;
+    padding:18px;
+    margin:0;
 }}
 </style>
 
 <div class="diagram-box">
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-    <div class="mermaid">
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<div class="mermaid">
 {code}
-    </div>
+</div>
 </div>
 
 <script>
