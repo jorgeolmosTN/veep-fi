@@ -12,16 +12,28 @@ def render():
     .block-container {
         padding-left: 4rem !important;
         padding-right: 4rem !important;
-        padding-top: 0.3rem !important;
-        padding-bottom: 0.3rem !important;
+        padding-top: 0.2rem !important;
+        padding-bottom: 0.2rem !important;
     }
 
-    h1 { margin-bottom: 8px !important; }
-    h3 { margin-top: 8px !important; margin-bottom: 4px !important; }
+    h2 {
+        margin-top: 0px !important;
+        margin-bottom: 8px !important;
+        font-size: 40px;
+        font-weight: 700;
+    }
+
+    h3 {
+        margin-top: 12px !important;
+        margin-bottom: 6px !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-    st.title("Pinwheel Integration")
+    # --------------------------------------------------
+    # TITLE (Controlled — No Giant Margin)
+    # --------------------------------------------------
+    st.markdown("<h2>Pinwheel Integration</h2>", unsafe_allow_html=True)
 
     # =====================================================
     # INFO SECTION
@@ -76,7 +88,7 @@ flowchart LR
     User --> FE --> Widget --> Employer --> Auth --> Income --> Linked --> Final
 """
 
-    render_mermaid(happy_flow)
+    render_mermaid(happy_flow, height=260)
 
     # =====================================================
     # 2️⃣ EXIT FLOW
@@ -99,10 +111,10 @@ flowchart LR
     User --> FE --> Widget --> Exit --> Dashboard --> Tier
 """
 
-    render_mermaid(exit_flow)
+    render_mermaid(exit_flow, height=230)
 
     # =====================================================
-    # 3️⃣ SEQUENCE DIAGRAM
+    # 3️⃣ SEQUENCE DIAGRAM (BIG HEIGHT)
     # =====================================================
     st.markdown("### 3. Pinwheel Integration — Sequence Diagram")
 
@@ -135,13 +147,13 @@ sequenceDiagram
     end
 """
 
-    render_mermaid(sequence)
+    render_mermaid(sequence, height=700)
 
 
 # --------------------------------------------------
-# MERMAID RENDERER (AUTO HEIGHT — NO FIXED SPACE)
+# MERMAID RENDERER
 # --------------------------------------------------
-def render_mermaid(code: str):
+def render_mermaid(code: str, height: int):
 
     components.html(
         f"""
@@ -170,5 +182,6 @@ def render_mermaid(code: str):
             mermaid.initialize({{ startOnLoad: true }});
         </script>
         """,
-        scrolling=True
+        height=height,
+        scrolling=False
     )
