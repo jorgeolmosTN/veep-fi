@@ -1,1 +1,79 @@
-import streamlit as st from Sections import pinwheel st.set_page_config(layout="wide") # --------------------------------------------------- # SESSION STATE INIT # --------------------------------------------------- if "authenticated" not in st.session_state: st.session_state.authenticated = False if "page" not in st.session_state: st.session_state.page = "overview" # --------------------------------------------------- # BASIC STYLE ONLY (NO NAV HTML) # --------------------------------------------------- st.markdown(""" <style> header {visibility: hidden;} footer {visibility: hidden;} #MainMenu {visibility: hidden;} .block-container {padding: 0 !important;} .stApp { background-color: #dcdcdc; } </style> """, unsafe_allow_html=True) # --------------------------------------------------- # LOGIN SCREEN # --------------------------------------------------- def login_screen(): st.markdown("<div style='height:32vh'></div>", unsafe_allow_html=True) left, center, right = st.columns([3,2,3]) with center: with st.form("login_form"): username = st.text_input("", placeholder="User", label_visibility="collapsed") password = st.text_input("", type="password", placeholder="Password", label_visibility="collapsed") submitted = st.form_submit_button("Login", use_container_width=True) if submitted: if username == "veep" and password == "fi2026": st.session_state.authenticated = True st.session_state.page = "overview" st.rerun() # --------------------------------------------------- # NAVIGATION (PURE STREAMLIT) # --------------------------------------------------- def render_navbar(): nav_col1, nav_col2 = st.columns(2) with nav_col1: if st.button("Overview", use_container_width=True): st.session_state.page = "overview" with nav_col2: if st.button("Pinwheel", use_container_width=True): st.session_state.page = "pinwheel" # --------------------------------------------------- # MAIN APP # --------------------------------------------------- def main_app(): render_navbar() st.markdown("---") if st.session_state.page == "overview": st.title("FI Overview") elif st.session_state.page == "pinwheel": pinwheel.render() # --------------------------------------------------- # ROUTER # --------------------------------------------------- if not st.session_state.authenticated: login_screen() else: main_app()
+import streamlit as st
+
+
+# ---------------------------------------------------
+# INIT STATE
+# ---------------------------------------------------
+if "pinwheel_step" not in st.session_state:
+    st.session_state.pinwheel_step = "question"
+
+if "model_status" not in st.session_state:
+    st.session_state.model_status = "Not Opted In"
+
+if "model_tier" not in st.session_state:
+    st.session_state.model_tier = "Standard"
+
+
+# ---------------------------------------------------
+# RENDER FUNCTION
+# ---------------------------------------------------
+def render():
+
+    # ---------------------------
+    # STEP 1: QUESTION STAGE
+    # ---------------------------
+    if st.session_state.pinwheel_step == "question":
+
+        st.title("Connect Payroll with Pinwheel")
+
+        st.write("Would you like to connect your payroll provider?")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if st.button("Do Not Request", use_container_width=True):
+                # Direct return to dashboard
+                st.session_state.page = "overview"
+                st.session_state.pinwheel_step = "question"
+                st.rerun()
+
+        with col2:
+            if st.button("Request Pinwheel", use_container_width=True):
+                st.session_state.pinwheel_step = "widget"
+                st.rerun()
+
+    # ---------------------------
+    # STEP 2: PINWHEEL WIDGET
+    # ---------------------------
+    elif st.session_state.pinwheel_step == "widget":
+
+        st.title("Pinwheel Widget")
+
+        st.info("🔐 Pinwheel payroll connection flow would render here.")
+
+        st.write("User can complete connection or exit anytime.")
+
+        if st.button("Exit Anytime", use_container_width=True):
+            st.session_state.pinwheel_step = "exit"
+            st.rerun()
+
+    # ---------------------------
+    # STEP 3: EXIT ANYTIME LOGIC
+    # ---------------------------
+    elif st.session_state.pinwheel_step == "exit":
+
+        st.title("Processing Model Update")
+
+        # Simulate model update
+        st.session_state.model_status = "Opted In"
+        st.session_state.model_tier = "Lower Tier"
+
+        st.success("Model updated successfully.")
+
+        st.write("Model Status:", st.session_state.model_status)
+        st.write("Model Tier:", st.session_state.model_tier)
+
+        if st.button("Return to Dashboard", use_container_width=True):
+            st.session_state.pinwheel_step = "question"
+            st.session_state.page = "overview"
+            st.rerun()
