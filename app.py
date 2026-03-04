@@ -1,5 +1,4 @@
 import streamlit as st
-import base64
 
 # ---------------------------------------------------
 # PAGE CONFIG
@@ -14,13 +13,20 @@ if "authenticated" not in st.session_state:
 
 
 # ---------------------------------------------------
-# LOAD IMAGE
+# GLOBAL STYLE
 # ---------------------------------------------------
-def get_base64_image(path):
-    with open(path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
+st.markdown("""
+<style>
+header {visibility: hidden;}
+footer {visibility: hidden;}
+#MainMenu {visibility: hidden;}
+.block-container {padding: 0 !important;}
 
-img = get_base64_image("assets/image_44a13a.png")
+.stApp {
+    background-color: #dcdcdc;
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 # ---------------------------------------------------
@@ -28,96 +34,43 @@ img = get_base64_image("assets/image_44a13a.png")
 # ---------------------------------------------------
 def login_screen():
 
-    st.markdown(f"""
-    <style>
+    # Vertical spacing
+    st.markdown("<div style='height:30vh'></div>", unsafe_allow_html=True)
 
-    header {{visibility: hidden;}}
-    footer {{visibility: hidden;}}
-    #MainMenu {{visibility: hidden;}}
-    .block-container {{padding: 0 !important;}}
+    col1, col2, col3 = st.columns([3,2,3])
 
-    /* Full screen background */
-    .stApp {{
-        background-image: url("data:image/png;base64,{img}");
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: contain;   /* <<< FIXED */
-        background-color: black;    /* fill empty space */
-        height: 100vh;
-    }}
+    with col2:
+        username = st.text_input("", placeholder="User")
+        password = st.text_input("", type="password", placeholder="Password")
 
-    /* Bottom cinematic overlay */
-    .overlay {{
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 35%;
-        background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0));
-        pointer-events: none;
-    }}
-
-    /* Bottom-right login container */
-    .login-container {{
-        position: fixed;
-        bottom: 80px;
-        right: 80px;
-        width: 260px;
-    }}
-
-    /* Input styling */
-    div[data-baseweb="input"] > div {{
-        background: rgba(255,255,255,0.15) !important;
-        border: none !important;
-        border-radius: 6px !important;
-        backdrop-filter: blur(6px);
-    }}
-
-    input {{
-        color: white !important;
-        font-size: 13px !important;
-    }}
-
-    input::placeholder {{
-        color: rgba(255,255,255,0.7);
-        letter-spacing: 2px;
-        font-size: 11px;
-    }}
-
-    button[aria-label="Show password"] {{
-        background: transparent !important;
-        color: white !important;
-    }}
-
-    .stButton > button {{
-        display: none;
-    }}
-
-    </style>
-    """, unsafe_allow_html=True)
-
-    # Overlay layer
-    st.markdown('<div class="overlay"></div>', unsafe_allow_html=True)
-
-    # Login inputs
-    st.markdown('<div class="login-container">', unsafe_allow_html=True)
-
-    username = st.text_input("", placeholder="USER", key="username")
-    password = st.text_input("", placeholder="PASS", type="password", key="password")
-
-    if st.button("Login"):
-        if username == "veep" and password == "fi2026":
-            st.session_state.authenticated = True
-            st.rerun()
-
-    st.markdown('</div>', unsafe_allow_html=True)
+        if st.button("Enter", use_container_width=True):
+            if username == "veep" and password == "fi2026":
+                st.session_state.authenticated = True
+                st.rerun()
 
 
 # ---------------------------------------------------
 # MAIN APP
 # ---------------------------------------------------
 def main_app():
-    st.write("Logged in successfully.")
+
+    tabs = st.tabs([
+        "Overview",
+        "EWA Request",
+        "Eligibility",
+        "Advance Creation",
+        "Pinwheel",
+        "Connective",
+        "Q2",
+        "Nudge",
+        "Repayment – No Funds",
+        "Repayment – Uncollectable",
+        "Employer Missing",
+        "Full Architecture"
+    ])
+
+    with tabs[0]:
+        st.title("FI Overview")
 
 
 # ---------------------------------------------------
