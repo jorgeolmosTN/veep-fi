@@ -1,139 +1,81 @@
 import streamlit as st
 
-# ---------------------------------------------------
-# PAGE CONFIG
-# ---------------------------------------------------
-st.set_page_config(layout="wide")
+def render_landing():
+    # URL de tu imagen en GitHub (Reemplaza con tu link Raw)
+    IMG_URL = "https://github.com/jorgeolmosTN/veep-fi/blob/5a80393b3b059c16fe6fa1335c3bc1e238776758/assets/image_44a13a.png"
 
-# ---------------------------------------------------
-# SESSION STATE
-# ---------------------------------------------------
-if "authenticated" not in st.session_state:
-    st.session_state.authenticated = False
+    st.markdown(f"""
+        <style>
+        /* Fondo de pantalla completa */
+        .stApp {{
+            background-image: url("{IMG_URL}");
+            background-size: cover;
+            background-position: center;
+        }}
 
-# ---------------------------------------------------
-# GLOBAL RESET
-# ---------------------------------------------------
-st.markdown("""
-<style>
-header {visibility: hidden;}
-footer {visibility: hidden;}
-#MainMenu {visibility: hidden;}
-.block-container {padding: 0 !important;}
-</style>
-""", unsafe_allow_html=True)
+        /* Contenedor principal para organizar Welcome y Login */
+        .main-container {{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 80vh;
+            padding: 50px;
+        }}
 
+        /* Texto Welcome abajo a la izquierda */
+        .welcome-text {{
+            color: white;
+            font-size: 80px;
+            font-weight: bold;
+            font-family: sans-serif;
+            margin-bottom: 20px;
+        }}
 
-# ---------------------------------------------------
-# LOGIN SCREEN
-# ---------------------------------------------------
-def login_screen():
+        /* Caja de Login abajo a la derecha */
+        .login-box {{
+            background: rgba(0, 0, 0, 0.4); /* Fondo oscuro traslúcido */
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+        }}
 
-    st.markdown("""
-    <style>
-
-    /* Premium soft gradient background */
-    .stApp {
-        background: radial-gradient(circle at top left, #f2f2f2, #d9d9d9);
-        height: 100vh;
-    }
-
-    /* Center container */
-    .login-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-
-    /* Glass card */
-    .login-card {
-        width: 320px;
-        padding: 50px 40px;
-        border-radius: 14px;
-        background: rgba(255,255,255,0.55);
-        backdrop-filter: blur(18px);
-    }
-
-    /* Remove default input styling */
-    div[data-baseweb="input"] {
-        margin-bottom: 28px;
-    }
-
-    div[data-baseweb="input"] > div {
-        border: none !important;
-        border-bottom: 1px solid #aaa !important;
-        border-radius: 0 !important;
-        background: transparent !important;
-        transition: all 0.3s ease;
-    }
-
-    div[data-baseweb="input"] > div:focus-within {
-        border-bottom: 1px solid black !important;
-    }
-
-    input {
-        background: transparent !important;
-        text-align: center;
-        font-size: 14px !important;
-        padding: 6px !important;
-    }
-
-    /* Hide password reveal icon background */
-    button[aria-label="Show password"] {
-        background: transparent !important;
-    }
-
-    /* Hide button completely (we'll still use it logically) */
-    .stButton > button {
-        display: none;
-    }
-
-    </style>
+        /* Estilo para etiquetas de texto de Streamlit dentro del login */
+        .stTextInput label {{
+            color: white !important;
+            font-weight: bold !important;
+            text-transform: uppercase;
+            font-size: 12px;
+        }}
+        
+        /* Ocultar elementos innecesarios de la landing */
+        [data-testid="stHeader"], [data-testid="stFooter"] {{
+            visibility: hidden;
+        }}
+        </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="login-wrapper"><div class="login-card">', unsafe_allow_html=True)
+    # Estructura de la página
+    st.markdown('<div class="main-container">', unsafe_allow_html=True)
+    
+    col_left, col_right = st.columns([2, 1])
 
-    username = st.text_input("", key="username")
-    password = st.text_input("", type="password", key="password")
+    with col_left:
+        st.markdown('<div class="welcome-text">welcome</div>', unsafe_allow_html=True)
 
-    # Hidden button for Enter trigger
-    if st.button("Login"):
-        if username == "veep" and password == "fi2026":
-            st.session_state.authenticated = True
-            st.rerun()
+    with col_right:
+        # Usamos un formulario para que se vea como una caja compacta
+        with st.container():
+            st.markdown('<div class="login-box">', unsafe_allow_html=True)
+            user = st.text_input("USER", placeholder="Introduce tu usuario", key="l_user")
+            password = st.text_input("PASS", type="password", placeholder="••••••••", key="l_pass")
+            
+            if st.button("INGRESAR", use_container_width=True):
+                if user == "admin" and password == "1234": # Ejemplo simple
+                    st.success("¡Bienvenido!")
+                    st.session_state.seccion_activa = "Transporte"
+                    st.rerun()
+                else:
+                    st.error("Credenciales inválidas")
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown('</div></div>', unsafe_allow_html=True)
-
-
-# ---------------------------------------------------
-# MAIN APP
-# ---------------------------------------------------
-def main_app():
-
-    tabs = st.tabs([
-        "Overview",
-        "EWA Request",
-        "Eligibility",
-        "Advance Creation",
-        "Pinwheel",
-        "Connective",
-        "Q2",
-        "Nudge",
-        "Repayment – No Funds",
-        "Repayment – Uncollectable",
-        "Employer Missing",
-        "Full Architecture"
-    ])
-
-    with tabs[0]:
-        st.title("FI Overview")
-
-
-# ---------------------------------------------------
-# ROUTER
-# ---------------------------------------------------
-if not st.session_state.authenticated:
-    login_screen()
-else:
-    main_app()
+    st.markdown('</div>', unsafe_allow_html=True)
