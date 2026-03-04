@@ -9,161 +9,81 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------
-# REMOVE ALL STREAMLIT UI / SPACING
+# REMOVE STREAMLIT HEADER / FOOTER / PADDING
 # ---------------------------------------------------
-st.markdown(
-    """
-    <style>
-    .block-container {
-        padding: 0rem !important;
-    }
+st.markdown("""
+<style>
+.block-container {
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
 
-    header {visibility: hidden;}
-    footer {visibility: hidden;}
-    #MainMenu {visibility: hidden;}
+header {visibility: hidden;}
+footer {visibility: hidden;}
+#MainMenu {visibility: hidden;}
 
-    /* NAVBAR */
-    .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: #111;
-        display: flex;
-        align-items: center;
-        font-family: Arial, sans-serif;
-        z-index: 9999;
-    }
-
-    .navbar a, .dropbtn {
-        color: white;
-        padding: 18px 24px;
-        text-decoration: none;
-        font-size: 14px;
-        background: none;
-        border: none;
-        cursor: pointer;
-    }
-
-    .navbar a:hover, .dropdown:hover .dropbtn {
-        background-color: #222;
-    }
-
-    .dropdown {
-        position: relative;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #1c1c1c;
-        min-width: 240px;
-        top: 54px;
-    }
-
-    .dropdown-content a {
-        display: block;
-        padding: 14px 18px;
-        color: white;
-    }
-
-    .dropdown-content a:hover {
-        background-color: #333;
-    }
-
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+/* Remove extra top spacing */
+div[data-testid="stVerticalBlock"] > div:first-child {
+    margin-top: 0rem !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ---------------------------------------------------
-# NAVBAR HTML
+# TOP NAVIGATION (CLOUD SAFE)
 # ---------------------------------------------------
-st.markdown(
-    """
-    <div class="navbar">
-        <a href="?page=overview">Overview</a>
-
-        <div class="dropdown">
-            <button class="dropbtn">Core Flows</button>
-            <div class="dropdown-content">
-                <a href="?page=ewa">EWA Request</a>
-                <a href="?page=eligibility">Eligibility & Model</a>
-                <a href="?page=advance">Advance Creation</a>
-            </div>
-        </div>
-
-        <div class="dropdown">
-            <button class="dropbtn">Integrations</button>
-            <div class="dropdown-content">
-                <a href="?page=pinwheel">Pinwheel</a>
-                <a href="?page=connective">Connective (Kinective)</a>
-                <a href="?page=q2">Q2 Widget</a>
-                <a href="?page=nudge">Nudge</a>
-            </div>
-        </div>
-
-        <div class="dropdown">
-            <button class="dropbtn">Edge Cases</button>
-            <div class="dropdown-content">
-                <a href="?page=no_funds">Repayment – No Funds</a>
-                <a href="?page=uncollectable">Repayment – Uncollectable</a>
-                <a href="?page=employer_missing">Employer Not Found</a>
-            </div>
-        </div>
-
-        <a href="?page=architecture">Full Architecture</a>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+tabs = st.tabs([
+    "Overview",
+    "EWA Request",
+    "Eligibility",
+    "Advance Creation",
+    "Pinwheel",
+    "Connective",
+    "Q2",
+    "Nudge",
+    "Repayment – No Funds",
+    "Repayment – Uncollectable",
+    "Employer Missing",
+    "Full Architecture"
+])
 
 # ---------------------------------------------------
-# PUSH CONTENT BELOW NAVBAR
+# TAB CONTENT
 # ---------------------------------------------------
-st.markdown("<div style='margin-top:70px;'></div>", unsafe_allow_html=True)
-
-# ---------------------------------------------------
-# ROUTING
-# ---------------------------------------------------
-page = st.query_params.get("page", "overview")
-
-if page == "overview":
+with tabs[0]:
     st.title("FI Overview")
-    st.write("High-level architecture and flow summary.")
 
-elif page == "ewa":
+with tabs[1]:
     st.title("EWA Request Flow")
 
-elif page == "eligibility":
+with tabs[2]:
     st.title("Eligibility & Model")
 
-elif page == "advance":
+with tabs[3]:
     st.title("Advance Creation")
 
-elif page == "pinwheel":
+with tabs[4]:
     st.title("Pinwheel Integration")
 
-elif page == "connective":
+with tabs[5]:
     st.title("Connective (Kinective)")
 
-elif page == "q2":
+with tabs[6]:
     st.title("Q2 Widget")
 
-elif page == "nudge":
+with tabs[7]:
     st.title("Nudge Integration")
 
-elif page == "no_funds":
+with tabs[8]:
     st.title("Repayment – No Funds")
 
-elif page == "uncollectable":
+with tabs[9]:
     st.title("Repayment – Uncollectable")
 
-elif page == "employer_missing":
+with tabs[10]:
     st.title("Employer Not Found")
 
-elif page == "architecture":
+with tabs[11]:
     st.title("Full FI Architecture")
