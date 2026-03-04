@@ -1,59 +1,131 @@
 import streamlit as st
+import base64
 
-def render_landing():
-    # REEMPLAZA ESTE LINK POR TU LINK RAW DE GITHUB
-    IMG_URL = "https://github.com/jorgeolmosTN/veep-fi/blob/54dde2321cfd3d562f7dc1b984d5a98da7fdd38f/assets/image_44a13a.png"
+# ---------------------------------------------------
+# PAGE CONFIG
+# ---------------------------------------------------
+st.set_page_config(layout="wide")
+
+# ---------------------------------------------------
+# SESSION STATE
+# ---------------------------------------------------
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+
+# ---------------------------------------------------
+# LOAD BACKGROUND IMAGE
+# ---------------------------------------------------
+def get_base64_image(image_path):
+    with open(image_path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+img_base64 = get_base64_image("assets/image_44a13a.png")
+
+
+# ---------------------------------------------------
+# LOGIN SCREEN
+# ---------------------------------------------------
+def login_screen():
 
     st.markdown(f"""
-        <style>
-        /* Aplicar fondo a toda la app solo en esta sección */
-        .stApp {{
-            background-image: url("{IMG_URL}");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }}
-        
-        /* Contenedor del Login a la derecha */
-        .login-wrapper {{
-            display: flex;
-            justify-content: flex-end;
-            align-items: flex-end;
-            height: 70vh;
-            padding-right: 10%;
-        }}
+    <style>
 
-        .login-box {{
-            background: rgba(0, 0, 0, 0.6);
-            padding: 30px;
-            border-radius: 15px;
-            width: 320px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px); /* Efecto esmerilado */
-        }}
+    header {{visibility: hidden;}}
+    footer {{visibility: hidden;}}
+    #MainMenu {{visibility: hidden;}}
+    .block-container {{padding: 0 !important;}}
 
-        /* Estilo de los textos de entrada */
-        .stTextInput label p {{
-            color: white !important;
-            font-size: 14px !important;
-            letter-spacing: 1px;
-        }}
-        </style>
+    /* Full screen background */
+    .stApp {{
+        background: url("data:image/png;base64,{img_base64}") no-repeat center center fixed;
+        background-size: cover;
+        height: 100vh;
+    }}
+
+    /* Bottom dark gradient overlay */
+    .overlay {{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 35%;
+        background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0));
+        z-index: 1;
+    }}
+
+    /* Right floating login */
+    .login-container {{
+        position: fixed;
+        right: 80px;
+        bottom: 120px;
+        width: 260px;
+        z-index: 2;
+    }}
+
+    /* Input style */
+    div[data-baseweb="input"] > div {{
+        background: rgba(255,255,255,0.15) !important;
+        border: none !important;
+        border-radius: 6px !important;
+        backdrop-filter: blur(6px);
+    }}
+
+    input {{
+        color: white !important;
+        font-size: 13px !important;
+        text-align: left;
+    }}
+
+    /* Placeholder color */
+    input::placeholder {{
+        color: rgba(255,255,255,0.7);
+        letter-spacing: 2px;
+        font-size: 11px;
+    }}
+
+    /* Password eye icon */
+    button[aria-label="Show password"] {{
+        background: transparent !important;
+        color: white !important;
+    }}
+
+    /* Remove button */
+    .stButton > button {{
+        display: none;
+    }}
+
+    </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
-    with st.container():
-        st.markdown('<div class="login-box">', unsafe_allow_html=True)
-        st.markdown("<h2 style='color:white; text-align:center; margin-top:0;'>LOGIN</h2>", unsafe_allow_html=True)
-        
-        user = st.text_input("USUARIO", key="login_user")
-        password = st.text_input("CONTRASEÑA", type="password", key="login_pass")
-        
-        if st.button("INGRESAR", use_container_width=True):
-            if user == "admin" and password == "1234": # Cambiá esto por tus credenciales
-                st.session_state.seccion_activa = "Transporte"
-                st.rerun()
-            else:
-                st.error("Credenciales incorrectas")
-        st.markdown('</div>', unsafe_allow_html=True)
+    # Overlay layer
+    st.markdown('<div class="overlay"></div>', unsafe_allow_html=True)
+
+    # Login box
+    st.markdown('<div class="login-container">', unsafe_allow_html=True)
+
+    username = st.text_input("", placeholder="USER", key="username")
+    password = st.text_input("", placeholder="PASS", type="password", key="password")
+
+    if st.button("Login"):
+        if username == "veep" and password == "fi2026":
+            st.session_state.authenticated = True
+            st.rerun()
+
     st.markdown('</div>', unsafe_allow_html=True)
+
+
+# ---------------------------------------------------
+# MAIN APP
+# ---------------------------------------------------
+def main_app():
+    st.write("Logged in successfully.")
+
+
+# ---------------------------------------------------
+# ROUTER
+# ---------------------------------------------------
+if not st.session_state.authenticated:
+    login_screen()
+else:
+    main_app()
