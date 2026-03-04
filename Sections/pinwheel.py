@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_mermaid import mermaid
+import streamlit.components.v1 as components
 
 
 def render():
@@ -13,14 +13,13 @@ required for FI eligibility and EWA disbursement.
 
     st.divider()
 
-    # ===============================
+    # =====================================================
     # 1️⃣ USER FLOW
-    # ===============================
+    # =====================================================
     st.header("1. User Flow")
 
     user_flow = """
     flowchart LR
-
         User --> FE["Veep FE"]
         FE --> Widget["Pinwheel Widget"]
         Widget --> Employer["Select Employer"]
@@ -30,13 +29,13 @@ required for FI eligibility and EWA disbursement.
         Linked --> Eligible["Eligibility Recalculated"]
     """
 
-    mermaid(user_flow)
+    render_mermaid(user_flow)
 
     st.divider()
 
-    # ===============================
+    # =====================================================
     # 2️⃣ SYSTEM ARCHITECTURE
-    # ===============================
+    # =====================================================
     st.header("2. System Architecture (FE / BE / Model)")
 
     system_diagram = """
@@ -78,4 +77,19 @@ required for FI eligibility and EWA disbursement.
         API -.-> EdgeCase["Employer Not Found (Phase 2)"]
     """
 
-    mermaid(system_diagram)
+    render_mermaid(system_diagram)
+
+
+def render_mermaid(code: str):
+    components.html(
+        f"""
+        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+        <div class="mermaid">
+            {code}
+        </div>
+        <script>
+            mermaid.initialize({{ startOnLoad: true }});
+        </script>
+        """,
+        height=500,
+    )
