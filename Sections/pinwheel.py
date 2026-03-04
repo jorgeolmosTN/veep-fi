@@ -1,5 +1,7 @@
 import streamlit as st
-from graphviz import Digraph
+import graphviz
+
+dot = graphviz.Digraph()
 
 
 def render():
