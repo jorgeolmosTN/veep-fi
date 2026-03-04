@@ -62,21 +62,11 @@ def render():
     # =================================================
     st.markdown("<h2>Pinwheel User Flow</h2>", unsafe_allow_html=True)
 
-    components.html(
-        """
-        <div style="
-            border:1px solid #ddd;
-            border-radius:12px;
-            padding:20px;
-            width:90%;
-            margin:auto;
-            background:white;">
-            <img src="https://lucid.app/publicSegments/view/c49e1371-91bf-4804-8725-ef9f29bf5614/image.png"
-                 style="width:100%; height:auto; display:block;">
-        </div>
-        """,
-        height=800,
-    )
+    components.iframe(
+    "https://lucid.app/lucidchart/f5415687-d638-421f-8213-caa6d62a88c0/view",
+    height=900,
+    scrolling=True
+)
 
     st.markdown("---")
 
