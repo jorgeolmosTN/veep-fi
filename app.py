@@ -14,13 +14,13 @@ if "authenticated" not in st.session_state:
 
 
 # ---------------------------------------------------
-# LOAD BACKGROUND IMAGE
+# LOAD IMAGE
 # ---------------------------------------------------
-def get_base64_image(image_path):
-    with open(image_path, "rb") as f:
+def get_base64_image(path):
+    with open(path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
-img_base64 = get_base64_image("assets/image_44a13a.png")
+img = get_base64_image("assets/image_44a13a.png")
 
 
 # ---------------------------------------------------
@@ -38,12 +38,15 @@ def login_screen():
 
     /* Full screen background */
     .stApp {{
-        background: url("data:image/png;base64,{img_base64}") no-repeat center center fixed;
-        background-size: cover;
+        background-image: url("data:image/png;base64,{img}");
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: contain;   /* <<< FIXED */
+        background-color: black;    /* fill empty space */
         height: 100vh;
     }}
 
-    /* Bottom dark gradient overlay */
+    /* Bottom cinematic overlay */
     .overlay {{
         position: fixed;
         bottom: 0;
@@ -51,19 +54,18 @@ def login_screen():
         width: 100%;
         height: 35%;
         background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0));
-        z-index: 1;
+        pointer-events: none;
     }}
 
-    /* Right floating login */
+    /* Bottom-right login container */
     .login-container {{
         position: fixed;
+        bottom: 80px;
         right: 80px;
-        bottom: 120px;
         width: 260px;
-        z-index: 2;
     }}
 
-    /* Input style */
+    /* Input styling */
     div[data-baseweb="input"] > div {{
         background: rgba(255,255,255,0.15) !important;
         border: none !important;
@@ -74,23 +76,19 @@ def login_screen():
     input {{
         color: white !important;
         font-size: 13px !important;
-        text-align: left;
     }}
 
-    /* Placeholder color */
     input::placeholder {{
         color: rgba(255,255,255,0.7);
         letter-spacing: 2px;
         font-size: 11px;
     }}
 
-    /* Password eye icon */
     button[aria-label="Show password"] {{
         background: transparent !important;
         color: white !important;
     }}
 
-    /* Remove button */
     .stButton > button {{
         display: none;
     }}
@@ -101,7 +99,7 @@ def login_screen():
     # Overlay layer
     st.markdown('<div class="overlay"></div>', unsafe_allow_html=True)
 
-    # Login box
+    # Login inputs
     st.markdown('<div class="login-container">', unsafe_allow_html=True)
 
     username = st.text_input("", placeholder="USER", key="username")
