@@ -11,6 +11,7 @@ st.set_page_config(layout="wide")
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
+
 # ---------------------------------------------------
 # GLOBAL STYLE
 # ---------------------------------------------------
@@ -37,8 +38,25 @@ button[kind="secondary"] {
 button[aria-label] {
     display: none !important;
 }
+
+/* Remove red focus outline and replace with dark grey */
+div[data-baseweb="input"] > div {
+    border: 1px solid #555 !important;
+}
+
+div[data-baseweb="input"] > div:focus-within {
+    border: 1px solid #333 !important;
+    box-shadow: none !important;
+}
+
+/* Remove red error glow */
+input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
+
 
 # ---------------------------------------------------
 # LOGIN SCREEN
@@ -53,7 +71,7 @@ def login_screen():
         with st.form("login_form", clear_on_submit=False):
 
             username = st.text_input(
-                "", 
+                "",
                 placeholder="User",
                 label_visibility="collapsed"
             )
@@ -72,11 +90,64 @@ def login_screen():
                     st.session_state.authenticated = True
                     st.rerun()
 
+
 # ---------------------------------------------------
-# MAIN APP
+# MAIN APP (MENU RESTORED)
 # ---------------------------------------------------
 def main_app():
-    st.title("FI Overview")
+
+    tabs = st.tabs([
+        "Overview",
+        "EWA Request",
+        "Eligibility",
+        "Advance Creation",
+        "Pinwheel",
+        "Connective",
+        "Q2",
+        "Nudge",
+        "Repayment – No Funds",
+        "Repayment – Uncollectable",
+        "Employer Missing",
+        "Full Architecture"
+    ])
+
+    with tabs[0]:
+        st.title("FI Overview")
+        st.write("High-level architecture and scope summary.")
+
+    with tabs[1]:
+        st.title("EWA Request Flow")
+
+    with tabs[2]:
+        st.title("Eligibility & Model")
+
+    with tabs[3]:
+        st.title("Advance Creation")
+
+    with tabs[4]:
+        st.title("Pinwheel Integration")
+
+    with tabs[5]:
+        st.title("Connective (Kinective)")
+
+    with tabs[6]:
+        st.title("Q2 Widget")
+
+    with tabs[7]:
+        st.title("Nudge Integration")
+
+    with tabs[8]:
+        st.title("Repayment – No Funds")
+
+    with tabs[9]:
+        st.title("Repayment – Uncollectable")
+
+    with tabs[10]:
+        st.title("Employer Not Found")
+
+    with tabs[11]:
+        st.title("Full FI Architecture")
+
 
 # ---------------------------------------------------
 # ROUTER
