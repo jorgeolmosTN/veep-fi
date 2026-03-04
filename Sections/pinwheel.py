@@ -1,8 +1,6 @@
 import streamlit as st
 import graphviz
 
-dot = graphviz.Digraph()
-
 
 def render():
 
@@ -20,7 +18,7 @@ required for FI eligibility and EWA disbursement.
     # =====================================================
     st.header("1. User Flow")
 
-    user_flow = Digraph()
+    user_flow = graphviz.Digraph()
     user_flow.attr(rankdir='LR')
     user_flow.attr('node', shape='box', style='rounded')
 
@@ -48,9 +46,9 @@ required for FI eligibility and EWA disbursement.
     # =====================================================
     # 2️⃣ SYSTEM ARCHITECTURE DIAGRAM
     # =====================================================
-    st.header("2. System Architecture (FE / BFF / BE / Model)")
+    st.header("2. System Architecture (FE / BE / Model)")
 
-    system = Digraph()
+    system = graphviz.Digraph()
     system.attr(rankdir='LR')
 
     # External
