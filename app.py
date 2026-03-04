@@ -1,81 +1,59 @@
 import streamlit as st
 
 def render_landing():
-    # URL de tu imagen en GitHub (Reemplaza con tu link Raw)
-    IMG_URL = "https://github.com/jorgeolmosTN/veep-fi/blob/5a80393b3b059c16fe6fa1335c3bc1e238776758/assets/image_44a13a.png"
+    # REEMPLAZA ESTE LINK POR TU LINK RAW DE GITHUB
+    IMG_URL = "https://raw.githubusercontent.com/tu_usuario/tu_repo/main/assets/fondo.png"
 
     st.markdown(f"""
         <style>
-        /* Fondo de pantalla completa */
+        /* Aplicar fondo a toda la app solo en esta sección */
         .stApp {{
             background-image: url("{IMG_URL}");
             background-size: cover;
             background-position: center;
-        }}
-
-        /* Contenedor principal para organizar Welcome y Login */
-        .main-container {{
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            height: 80vh;
-            padding: 50px;
-        }}
-
-        /* Texto Welcome abajo a la izquierda */
-        .welcome-text {{
-            color: white;
-            font-size: 80px;
-            font-weight: bold;
-            font-family: sans-serif;
-            margin-bottom: 20px;
-        }}
-
-        /* Caja de Login abajo a la derecha */
-        .login-box {{
-            background: rgba(0, 0, 0, 0.4); /* Fondo oscuro traslúcido */
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-        }}
-
-        /* Estilo para etiquetas de texto de Streamlit dentro del login */
-        .stTextInput label {{
-            color: white !important;
-            font-weight: bold !important;
-            text-transform: uppercase;
-            font-size: 12px;
+            background-attachment: fixed;
         }}
         
-        /* Ocultar elementos innecesarios de la landing */
-        [data-testid="stHeader"], [data-testid="stFooter"] {{
-            visibility: hidden;
+        /* Contenedor del Login a la derecha */
+        .login-wrapper {{
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            height: 70vh;
+            padding-right: 10%;
+        }}
+
+        .login-box {{
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            width: 320px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px); /* Efecto esmerilado */
+        }}
+
+        /* Estilo de los textos de entrada */
+        .stTextInput label p {{
+            color: white !important;
+            font-size: 14px !important;
+            letter-spacing: 1px;
         }}
         </style>
     """, unsafe_allow_html=True)
 
-    # Estructura de la página
-    st.markdown('<div class="main-container">', unsafe_allow_html=True)
-    
-    col_left, col_right = st.columns([2, 1])
-
-    with col_left:
-        st.markdown('<div class="welcome-text">welcome</div>', unsafe_allow_html=True)
-
-    with col_right:
-        # Usamos un formulario para que se vea como una caja compacta
-        with st.container():
-            st.markdown('<div class="login-box">', unsafe_allow_html=True)
-            user = st.text_input("USER", placeholder="Introduce tu usuario", key="l_user")
-            password = st.text_input("PASS", type="password", placeholder="••••••••", key="l_pass")
-            
-            if st.button("INGRESAR", use_container_width=True):
-                if user == "admin" and password == "1234": # Ejemplo simple
-                    st.success("¡Bienvenido!")
-                    st.session_state.seccion_activa = "Transporte"
-                    st.rerun()
-                else:
-                    st.error("Credenciales inválidas")
-            st.markdown('</div>', unsafe_allow_html=True)
-
+    st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
+    with st.container():
+        st.markdown('<div class="login-box">', unsafe_allow_html=True)
+        st.markdown("<h2 style='color:white; text-align:center; margin-top:0;'>LOGIN</h2>", unsafe_allow_html=True)
+        
+        user = st.text_input("USUARIO", key="login_user")
+        password = st.text_input("CONTRASEÑA", type="password", key="login_pass")
+        
+        if st.button("INGRESAR", use_container_width=True):
+            if user == "admin" and password == "1234": # Cambiá esto por tus credenciales
+                st.session_state.seccion_activa = "Transporte"
+                st.rerun()
+            else:
+                st.error("Credenciales incorrectas")
+        st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
