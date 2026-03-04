@@ -7,10 +7,13 @@ from Sections import pinwheel
 st.set_page_config(layout="wide")
 
 # ---------------------------------------------------
-# SESSION STATE
+# SESSION STATE INIT
 # ---------------------------------------------------
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
+
+if "page" not in st.session_state:
+    st.session_state.page = "overview"
 
 
 # ---------------------------------------------------
@@ -23,7 +26,6 @@ footer {visibility: hidden;}
 #MainMenu {visibility: hidden;}
 .block-container {padding: 0 !important;}
 
-/* Grey background */
 .stApp {
     background-color: #dcdcdc;
 }
@@ -42,17 +44,18 @@ footer {visibility: hidden;}
     z-index: 9999;
 }
 
-/* Menu links */
-.navbar a {
+/* Menu buttons */
+.nav-btn {
     color: white;
-    text-decoration: none;
+    background: none;
+    border: none;
     margin-right: 40px;
     font-size: 14px;
+    cursor: pointer;
     transition: all 0.2s ease;
 }
 
-/* Hover amplify */
-.navbar a:hover {
+.nav-btn:hover {
     font-size: 16px;
 }
 
@@ -83,20 +86,27 @@ def login_screen():
             if submitted:
                 if username == "veep" and password == "fi2026":
                     st.session_state.authenticated = True
+                    st.session_state.page = "overview"
                     st.rerun()
 
 
 # ---------------------------------------------------
-# NAVIGATION BAR
+# NAVIGATION BAR (NO QUERY PARAMS)
 # ---------------------------------------------------
 def render_navbar():
 
     st.markdown("""
     <div class="navbar">
-        <a href="?page=overview">Overview</a>
-        <a href="?page=pinwheel">Pinwheel</a>
+        <form method="post">
+            <button class="nav-btn" name="nav" value="overview">Overview</button>
+            <button class="nav-btn" name="nav" value="pinwheel">Pinwheel</button>
+        </form>
     </div>
     """, unsafe_allow_html=True)
+
+    # Capture navigation
+    if "nav" in st.session_state:
+        st.session_state.page = st.session_state.nav
 
 
 # ---------------------------------------------------
@@ -106,15 +116,12 @@ def main_app():
 
     render_navbar()
 
-    # routing
-    page = st.query_params.get("page", "overview")
-
     st.markdown('<div class="page-content">', unsafe_allow_html=True)
 
-    if page == "overview":
+    if st.session_state.page == "overview":
         st.title("FI Overview")
 
-    elif page == "pinwheel":
+    elif st.session_state.page == "pinwheel":
         pinwheel.render()
 
     else:
