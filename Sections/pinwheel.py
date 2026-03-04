@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 def render():
 
     # --------------------------------------------------
-    # PAGE LAYOUT CONTROL
+    # PAGE SPACING CONTROL
     # --------------------------------------------------
     st.markdown("""
     <style>
@@ -16,67 +16,46 @@ def render():
         padding-bottom: 0.5rem !important;
     }
 
-    h1 { margin-bottom: 12px !important; }
+    h1 { margin-bottom: 10px !important; }
     h3 { margin-top: 8px !important; margin-bottom: 8px !important; }
-
     </style>
     """, unsafe_allow_html=True)
 
     st.title("Pinwheel Integration")
 
     # =====================================================
-    # INFO CARD (WITH DESCRIPTIONS)
+    # INFO SECTION (CLEAN — NO RAW HTML GRID)
     # =====================================================
-    st.markdown("""
-    <div style="
-        border:1px solid #e5e5e5;
-        border-radius:10px;
-        padding:20px;
-        margin-bottom:18px;
-        background:#ffffff;
-    ">
-        <div style="font-weight:600; margin-bottom:14px; font-size:15px;">
-            What Pinwheel Enables
-        </div>
 
-        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; font-size:13px;">
+    st.markdown("### What Pinwheel Enables")
 
-            <div>
-                <div>🏢 <b>Employer Verification</b></div>
-                <div style="color:#555;">Confirms active payroll relationship</div>
-            </div>
+    col1, col2, col3 = st.columns(3)
 
-            <div>
-                <div>💰 <b>Income Validation</b></div>
-                <div style="color:#555;">Retrieves verified compensation data</div>
-            </div>
+    with col1:
+        st.markdown("🏢 **Employer Verification**")
+        st.caption("Confirms active payroll relationship")
 
-            <div>
-                <div>🧩 <b>Member Enrichment</b></div>
-                <div style="color:#555;">Updates internal profile attributes</div>
-            </div>
+        st.markdown("🏦 **Destination Account Creation**")
+        st.caption("Creates verified payout account")
 
-            <div>
-                <div>🏦 <b>Destination Account Creation</b></div>
-                <div style="color:#555;">Creates verified payout account</div>
-            </div>
+    with col2:
+        st.markdown("💰 **Income Validation**")
+        st.caption("Retrieves verified compensation data")
 
-            <div>
-                <div>📊 <b>Eligibility Refresh</b></div>
-                <div style="color:#555;">Triggers Model recalculation</div>
-            </div>
+        st.markdown("📊 **Eligibility Refresh**")
+        st.caption("Triggers Model recalculation")
 
-            <div>
-                <div>⚠️ <b>Risk Tier Adjustment</b></div>
-                <div style="color:#555;">Applied on early widget exit</div>
-            </div>
+    with col3:
+        st.markdown("🧩 **Member Enrichment**")
+        st.caption("Updates internal profile attributes")
 
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown("⚠️ **Risk Tier Adjustment**")
+        st.caption("Applied on early widget exit")
+
+    st.markdown("---")
 
     # =====================================================
-    # 1️⃣ USER FLOW — HAPPY PATH
+    # 1️⃣ HAPPY PATH
     # =====================================================
     st.markdown("### 1. User Flow — Happy Path")
 
@@ -161,23 +140,19 @@ sequenceDiagram
 
 
 # --------------------------------------------------
-# MERMAID RENDERER (CLEAN THEME)
+# CLEAN MERMAID RENDERER
 # --------------------------------------------------
 def render_mermaid(code: str):
 
     components.html(
         f"""
-        <style>
-        .frame {{
+        <div style="
             border:1px solid #e5e5e5;
             border-radius:10px;
-            padding:18px;
+            padding:16px;
             background:#ffffff;
-            margin-bottom:18px;
-        }}
-        </style>
-
-        <div class="frame">
+            margin-bottom:20px;
+        ">
             <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
             <div class="mermaid">
             %%{{init: {{ 'theme': 'base', 'themeVariables': {{
