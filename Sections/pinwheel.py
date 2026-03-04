@@ -17,14 +17,14 @@ It supports:
 - Destination account creation
 - Eligibility recalculation
 - Risk-tier adjustments on early exit
-    """)
+""")
 
-    st.divider()
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
     # =====================================================
     # 1️⃣ USER FLOW — HAPPY PATH
     # =====================================================
-    st.header("1. User Flow — Happy Path")
+    st.markdown("### 1. User Flow — Happy Path")
 
     user_flow = """
 flowchart LR
@@ -44,14 +44,14 @@ flowchart LR
     User --> FE --> Widget --> Employer --> Auth --> Income --> Linked --> Eligible
 """
 
-    render_mermaid(user_flow)
+    render_boxed_mermaid(user_flow, height=380)
 
-    st.divider()
+    st.markdown("<div style='height:25px'></div>", unsafe_allow_html=True)
 
     # =====================================================
     # 2️⃣ EXIT ANYTIME FLOW — RISK IMPACT
     # =====================================================
-    st.header("2. Exit Anytime Flow — Risk Impact")
+    st.markdown("### 2. Exit Anytime Flow — Risk Impact")
 
     exit_flow = """
 flowchart LR
@@ -69,70 +69,78 @@ flowchart LR
     User --> Widget --> Exit --> Dashboard --> Tier
 """
 
-    render_mermaid(exit_flow)
+    render_boxed_mermaid(exit_flow, height=300)
 
-    st.divider()
+    st.markdown("<div style='height:25px'></div>", unsafe_allow_html=True)
 
     # =====================================================
-    # 3️⃣ SYSTEM ARCHITECTURE DIAGRAM
+    # 3️⃣ SEQUENCE DIAGRAM — ENTERPRISE VIEW
     # =====================================================
-    st.header("3. System Architecture (FE / Pinwheel / BE / Model)")
+    st.markdown("### 3. Pinwheel Integration — Sequence Diagram")
 
-    system_diagram = """
-flowchart LR
+    sequence_diagram = """
+sequenceDiagram
+    participant U as User
+    participant FE as Veep FE
+    participant BE as Veep Backend
+    participant PW as Pinwheel
+    participant M as ModelShop
 
-    classDef cluster fill:#f9f9f9,stroke:#bbb,stroke-width:1px;
-    classDef risk fill:#ffe6e6,stroke:#a33,stroke-width:1px,color:#600;
+    U->>FE: Open EWA
+    FE->>PW: Launch Pinwheel Widget
 
-    User((User))
-
-    subgraph Frontend
-        FE["Veep FE"]
-        Widget["Pinwheel Widget"]
+    alt Happy Path
+        U->>PW: Select Employer
+        PW->>PW: Authenticate Payroll
+        PW->>FE: Return Income + Employer Data
+        FE->>BE: Send verified payroll data
+        BE->>BE: Member Enrichment
+        BE->>BE: Create Destination Account
+        BE->>M: Trigger Eligibility Refresh
+        M-->>BE: Eligibility Updated
+        BE-->>FE: Eligibility Confirmed
+        FE-->>U: Updated EWA Dashboard
+    else Employer Not Found
+        PW-->>FE: Employer Not Found
+        FE-->>U: Display Phase 2 Handling
+    else Exit Anytime
+        U->>FE: Exit Pinwheel
+        FE-->>U: Return to EWA Dashboard
+        FE->>BE: Flag Early Exit
+        BE->>M: Apply Tier Reduction
+        M-->>BE: Risk Tier Updated
     end
-
-    subgraph Pinwheel
-        API["Pinwheel API"]
-        EmployerData["Employer Data"]
-        Income["Income Verification"]
-    end
-
-    subgraph VeepBackend["Veep Backend"]
-        Enrich["Member Enrichment"]
-        Destination["Destination Account Creation"]
-    end
-
-    subgraph ModelShop
-        Eligibility["Eligibility Recalculation"]
-    end
-
-    User --> FE
-    FE --> Widget
-    Widget --> API
-
-    API --> EmployerData
-    EmployerData --> Income
-
-    Income --> Enrich
-    Enrich --> Destination
-    Destination --> Eligibility
-
-    API -.-> EdgeCase["Employer Not Found (Phase 2)"]
 """
 
-    render_mermaid(system_diagram)
+    render_boxed_mermaid(sequence_diagram, height=550)
 
 
-def render_mermaid(code: str):
+# =====================================================
+# PROFESSIONAL BOXED MERMAID RENDERER
+# =====================================================
+def render_boxed_mermaid(code: str, height: int = 400):
     components.html(
         f"""
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<div class="mermaid">
+<style>
+.diagram-box {{
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 5px;
+}}
+</style>
+
+<div class="diagram-box">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <div class="mermaid">
 {code}
+    </div>
 </div>
+
 <script>
 mermaid.initialize({{ startOnLoad: true }});
 </script>
         """,
-        height=550,
+        height=height,
     )
