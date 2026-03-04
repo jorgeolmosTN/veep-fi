@@ -5,55 +5,72 @@ def render():
 
     st.title("Pinwheel Integration")
 
-    st.subheader("Pinwheel Integration Flow")
-
-    mermaid_code = """
-    flowchart LR
-
-        User --> FE["Veep FE"]
-        FE --> PW_Widget["Pinwheel Widget"]
-        PW_Widget --> PW_API["Pinwheel API"]
-
-        PW_API --> BE["Veep Backend"]
-
-        BE --> Enrich["Member Enrichment"]
-        Enrich --> Dest["Create Destination Account"]
-
-        Dest --> Model["ModelShop Eligibility Refresh"]
-        Model --> FE
-
-        PW_API -->|Employer Not Found| Edge["Edge Case Handling (Phase 2)"]
-    """
-
-    st.markdown(
-        f"""
-        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-        <div class="mermaid">
-        {mermaid_code}
-        </div>
-        <script>
-            mermaid.initialize({{ startOnLoad: true }});
-        </script>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    st.markdown("---")
-
-    st.markdown("### Flow Explanation")
+    # ---------------------------------------------------
+    # 1️⃣ WHAT IS PINWHEEL
+    # ---------------------------------------------------
+    st.header("1. What is Pinwheel?")
 
     st.markdown("""
-    **1. User initiates account linking in FE**  
-    → Pinwheel widget loads.
+Pinwheel is used in the FI flow to:
 
-    **2. Pinwheel verifies employer & income**  
-    → Returns payroll data.
+- Verify employer information  
+- Validate income data  
+- Link payroll account  
+- Enable destination account creation  
+- Trigger eligibility refresh in ModelShop  
 
-    **3. Backend enriches member profile**
-
-    **4. Destination account created**
-
-    **5. Eligibility refreshed in ModelShop**
-
-    **6. Employer Not Found → Phase 2 handling**
+In short, Pinwheel enables verified payroll connectivity required for EWA.
     """)
+
+    st.divider()
+
+    # ---------------------------------------------------
+    # 2️⃣ USER FLOW
+    # ---------------------------------------------------
+    st.header("2. User Flow")
+
+    user_flow = """
+    digraph {
+        rankdir=LR;
+        node [shape=box, style=rounded];
+
+        User -> "Open EWA";
+        "Open EWA" -> "Launch Pinwheel Widget";
+        "Launch Pinwheel Widget" -> "Select Employer";
+        "Select Employer" -> "Authenticate Payroll";
+        "Authenticate Payroll" -> "Payroll Verified";
+        "Payroll Verified" -> "Account Linked";
+        "Account Linked" -> "Eligibility Refreshed";
+    }
+    """
+
+    st.graphviz_chart(user_flow)
+
+    st.divider()
+
+    # ---------------------------------------------------
+    # 3️⃣ SYSTEM DIAGRAM
+    # ---------------------------------------------------
+    st.header("3. System Architecture (FE / BFF / BE / Model)")
+
+    system_diagram = """
+    digraph {
+        rankdir=LR;
+
+        node [shape=box];
+
+        User -> FE;
+        FE -> "Pinwheel Widget";
+        "Pinwheel Widget" -> "Pinwheel API";
+
+        "Pinwheel API" -> BE;
+        BE -> "Member Enrichment";
+        "Member Enrichment" -> "Destination Account Creation";
+        "Destination Account Creation" -> Model;
+        Model -> FE;
+
+        "Pinwheel API" -> "Employer Not Found" [style=dashed];
+    }
+    """
+
+    st.graphviz_chart(system_diagram)
