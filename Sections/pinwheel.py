@@ -4,22 +4,33 @@ import streamlit.components.v1 as components
 def render():
 
     # =================================================
-    # GLOBAL STYLE (minimal, clean)
+    # GLOBAL STYLE
     # =================================================
     st.markdown("""
         <style>
+        .main-container {
+            padding-left: 60px;
+            padding-right: 60px;
+        }
         h1 { font-size: 28px !important; }
-        h2 { font-size: 18px !important; margin-top: 30px; }
-        p  { font-size: 14px !important; color:#444; }
+        h2 { font-size: 18px !important; margin-top: 40px; }
+        p  { font-size: 14px !important; margin:0; }
+
         .card {
-            padding:18px;
-            border-radius:10px;
-            background:#f7f9fc;
-            border:1px solid #e5e7eb;
-            min-height:120px;
+            padding:20px;
+            border-radius:14px;
+            color:white;
+            min-height:140px;
+        }
+
+        .icon {
+            font-size:28px;
+            margin-bottom:10px;
         }
         </style>
     """, unsafe_allow_html=True)
+
+    st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
     # =================================================
     # TITLE
@@ -35,33 +46,37 @@ def render():
 
     with col1:
         st.markdown("""
-            <div class="card">
-            <strong>Secure Payroll</strong>
-            <p>User connects payroll provider via Pinwheel SDK.</p>
+            <div class="card" style="background:#4F46E5;">
+                <div class="icon">🔐</div>
+                <strong>Secure Payroll</strong>
+                <p>User connects payroll provider securely via Pinwheel SDK.</p>
             </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
-            <div class="card">
-            <strong>Income Data</strong>
-            <p>Verified employment & income information retrieved.</p>
+            <div class="card" style="background:#7C3AED;">
+                <div class="icon">📊</div>
+                <strong>Income Data</strong>
+                <p>Verified employment & income data retrieved.</p>
             </div>
         """, unsafe_allow_html=True)
 
     with col3:
         st.markdown("""
-            <div class="card">
-            <strong>Eligibility Trigger</strong>
-            <p>Connection updates model status and eligibility tier.</p>
+            <div class="card" style="background:#059669;">
+                <div class="icon">🧠</div>
+                <strong>Model Activation</strong>
+                <p>Updates model status and eligibility tier.</p>
             </div>
         """, unsafe_allow_html=True)
 
     with col4:
         st.markdown("""
-            <div class="card">
-            <strong>FI Enablement</strong>
-            <p>Allows Anytime Pay to be activated securely.</p>
+            <div class="card" style="background:#D97706;">
+                <div class="icon">⚡</div>
+                <strong>FI Enablement</strong>
+                <p>Unlocks Anytime Pay functionality securely.</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -70,14 +85,31 @@ def render():
     # =================================================
     st.markdown("<h2>Flow</h2>", unsafe_allow_html=True)
 
-    st.image(
-        "https://lucid.app/publicSegments/view/c49e1371-91bf-4804-8725-ef9f29bf5614/image.png",
-        use_container_width=True
+    components.html(
+        """
+        <div style="
+            display:flex;
+            justify-content:center;
+            margin-top:20px;
+        ">
+            <div style="
+                width:75%;
+                border:1px solid #e5e7eb;
+                border-radius:14px;
+                padding:20px;
+                background:white;
+            ">
+                <img src="https://lucid.app/publicSegments/view/e9f65060-fa9b-4f37-90bd-be8142decf57/image.png"
+                     style="width:100%; height:auto; border-radius:8px;">
+            </div>
+        </div>
+        """,
+        height=650,
     )
 
     st.markdown(
         """
-        <div style="margin-top:15px;">
+        <div style="text-align:center; margin-top:20px;">
             <a href="https://lucid.app/lucidchart/f5415687-d638-421f-8213-caa6d62a88c0/view"
                target="_blank"
                style="
@@ -95,7 +127,7 @@ def render():
     )
 
     # =================================================
-    # TECHNICAL DIAGRAM SECTION
+    # TECHNICAL DIAGRAM
     # =================================================
     st.markdown("<h2>Technical Diagram</h2>", unsafe_allow_html=True)
 
@@ -103,12 +135,12 @@ def render():
         """
         <div style="
             border:1px solid #e5e7eb;
-            border-radius:10px;
-            padding:20px;
+            border-radius:14px;
+            padding:25px;
             background:white;
             display:flex;
             justify-content:center;
-            gap:25px;
+            gap:30px;
             flex-wrap:wrap;
         ">
             <div>👤 User</div>
@@ -126,5 +158,7 @@ def render():
         Widget token → Backend exchange → Payroll data → Model update → Eligibility refresh
         </div>
         """,
-        height=220,
+        height=240,
     )
+
+    st.markdown('</div>', unsafe_allow_html=True)
