@@ -25,12 +25,12 @@ footer {visibility: hidden;}
     background-color: #dcdcdc;
 }
 
-/* Remove extra spacing between inputs */
+/* Tight spacing between inputs */
 div[data-testid="stTextInput"] {
     margin-bottom: 8px !important;
 }
 
-/* Remove password eye icon completely */
+/* Remove password eye icon */
 button[kind="secondary"] {
     display: none !important;
 }
@@ -50,13 +50,27 @@ def login_screen():
     left, center, right = st.columns([3,2,3])
 
     with center:
-        username = st.text_input("", placeholder="User", label_visibility="collapsed")
-        password = st.text_input("", type="password", placeholder="Password", label_visibility="collapsed")
+        with st.form("login_form", clear_on_submit=False):
 
-        if st.button("Login", use_container_width=True):
-            if username == "veep" and password == "fi2026":
-                st.session_state.authenticated = True
-                st.rerun()
+            username = st.text_input(
+                "", 
+                placeholder="User",
+                label_visibility="collapsed"
+            )
+
+            password = st.text_input(
+                "",
+                type="password",
+                placeholder="Password",
+                label_visibility="collapsed"
+            )
+
+            submitted = st.form_submit_button("Login", use_container_width=True)
+
+            if submitted:
+                if username == "veep" and password == "fi2026":
+                    st.session_state.authenticated = True
+                    st.rerun()
 
 # ---------------------------------------------------
 # MAIN APP
