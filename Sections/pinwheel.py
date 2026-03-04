@@ -1,5 +1,5 @@
 import streamlit as st
-import graphviz
+from streamlit_mermaid import mermaid
 
 
 def render():
@@ -18,80 +18,71 @@ required for FI eligibility and EWA disbursement.
     # =====================================================
     st.header("1. User Flow")
 
-    user_flow = graphviz.Digraph()
-    user_flow.attr(rankdir='LR')
-    user_flow.attr('node', shape='box', style='rounded')
+    user_flow = """
+    flowchart LR
 
-    user_flow.node("User")
-    user_flow.node("FE", "Veep FE")
-    user_flow.node("Widget", "Pinwheel Widget")
-    user_flow.node("Employer", "Select Employer")
-    user_flow.node("Auth", "Authenticate Payroll")
-    user_flow.node("Verify", "Income Verified")
-    user_flow.node("Linked", "Account Linked")
-    user_flow.node("Eligible", "Eligibility Recalculated")
+        User --> FE["Veep FE"]
+        FE --> Widget["Pinwheel Widget"]
+        Widget --> Employer["Select Employer"]
+        Employer --> Auth["Authenticate Payroll"]
+        Auth --> Income["Income Verified"]
+        Income --> Linked["Account Linked"]
+        Linked --> Eligible["Eligibility Recalculated"]
+    """
 
-    user_flow.edge("User", "FE")
-    user_flow.edge("FE", "Widget")
-    user_flow.edge("Widget", "Employer")
-    user_flow.edge("Employer", "Auth")
-    user_flow.edge("Auth", "Verify")
-    user_flow.edge("Verify", "Linked")
-    user_flow.edge("Linked", "Eligible")
-
-    st.graphviz_chart(user_flow)
+    mermaid(user_flow)
 
     st.divider()
 
     # =====================================================
-    # 2️⃣ SYSTEM ARCHITECTURE DIAGRAM
+    # 2️⃣ SYSTEM ARCHITECTURE
     # =====================================================
     st.header("2. System Architecture (FE / BE / Model)")
 
-    system = graphviz.Digraph()
-    system.attr(rankdir='LR')
+    system_diagram = """
+    flowchart LR
 
-    # External
-    system.node("User", shape="oval")
+        %% User
+        User((User))
 
-    # FE Cluster
-    with system.subgraph(name="cluster_fe") as fe:
-        fe.attr(label="Frontend")
-        fe.node("FE", "Veep FE")
-        fe.node("Widget", "Pinwheel Widget")
+        %% Frontend
+        subgraph Frontend
+            FE["Veep FE"]
+            Widget["Pinwheel Widget"]
+        end
 
-    # Pinwheel Cluster
-    with system.subgraph(name="cluster_pinwheel") as pw:
-        pw.attr(label="Pinwheel")
-        pw.node("API", "Pinwheel API")
-        pw.node("EmployerData", "Employer Data")
-        pw.node("Income", "Income Verification")
+        %% Pinwheel
+        subgraph Pinwheel
+            API["Pinwheel API"]
+            EmployerData["Employer Data"]
+            Income["Income Verification"]
+        end
 
-    # Backend Cluster
-    with system.subgraph(name="cluster_be") as be:
-        be.attr(label="Veep Backend")
-        be.node("Enrich", "Member Enrichment")
-        be.node("Destination", "Destination Account Creation")
+        %% Backend
+        subgraph VeepBackend["Veep Backend"]
+            Enrich["Member Enrichment"]
+            Destination["Destination Account Creation"]
+        end
 
-    # Model Cluster
-    with system.subgraph(name="cluster_model") as model:
-        model.attr(label="ModelShop")
-        model.node("Eligibility", "Eligibility Recalculation")
+        %% Model
+        subgraph ModelShop
+            Eligibility["Eligibility Recalculation"]
+        end
 
-    # Edges
-    system.edge("User", "FE")
-    system.edge("FE", "Widget")
-    system.edge("Widget", "API")
+        %% Flow
+        User --> FE
+        FE --> Widget
+        Widget --> API
 
-    system.edge("API", "EmployerData")
-    system.edge("EmployerData", "Income")
+        API --> EmployerData
+        EmployerData --> Income
 
-    system.edge("Income", "Enrich")
-    system.edge("Enrich", "Destination")
-    system.edge("Destination", "Eligibility")
+        Income --> Enrich
+        Enrich --> Destination
+        Destination --> Eligibility
 
-    # Edge Case
-    system.node("EdgeCase", "Employer Not Found\n(Phase 2)", shape="box", style="dashed")
-    system.edge("API", "EdgeCase", style="dashed")
+        %% Edge Case
+        API -.-> EdgeCase["Employer Not Found (Phase 2)"]
+    """
 
-    st.graphviz_chart(system)
+    mermaid(system_diagram)
