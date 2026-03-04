@@ -44,13 +44,13 @@ footer {visibility: hidden;}
     z-index: 9999;
 }
 
-/* Menu buttons */
+/* Nav button styling */
 .nav-btn {
-    color: white;
     background: none;
     border: none;
-    margin-right: 40px;
+    color: white;
     font-size: 14px;
+    margin-right: 40px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -91,22 +91,23 @@ def login_screen():
 
 
 # ---------------------------------------------------
-# NAVIGATION BAR (NO QUERY PARAMS)
+# NAVIGATION BAR (PURE STREAMLIT)
 # ---------------------------------------------------
 def render_navbar():
 
-    st.markdown("""
-    <div class="navbar">
-        <form method="post">
-            <button class="nav-btn" name="nav" value="overview">Overview</button>
-            <button class="nav-btn" name="nav" value="pinwheel">Pinwheel</button>
-        </form>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="navbar">', unsafe_allow_html=True)
 
-    # Capture navigation
-    if "nav" in st.session_state:
-        st.session_state.page = st.session_state.nav
+    col1, col2, col3 = st.columns([1,1,8])
+
+    with col1:
+        if st.button("Overview", key="nav_overview"):
+            st.session_state.page = "overview"
+
+    with col2:
+        if st.button("Pinwheel", key="nav_pinwheel"):
+            st.session_state.page = "pinwheel"
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ---------------------------------------------------
