@@ -26,12 +26,10 @@ footer {visibility: hidden;}
     background-color: #dcdcdc;
 }
 
-/* Tight spacing between inputs */
 div[data-testid="stTextInput"] {
     margin-bottom: 8px !important;
 }
 
-/* Remove password eye icon */
 button[kind="secondary"] {
     display: none !important;
 }
@@ -39,19 +37,12 @@ button[aria-label] {
     display: none !important;
 }
 
-/* Remove red focus outline and replace with dark grey */
 div[data-baseweb="input"] > div {
     border: 1px solid #555 !important;
 }
 
 div[data-baseweb="input"] > div:focus-within {
     border: 1px solid #333 !important;
-    box-shadow: none !important;
-}
-
-/* Remove red error glow */
-input:focus {
-    outline: none !important;
     box-shadow: none !important;
 }
 </style>
@@ -70,18 +61,8 @@ def login_screen():
     with center:
         with st.form("login_form", clear_on_submit=False):
 
-            username = st.text_input(
-                "",
-                placeholder="User",
-                label_visibility="collapsed"
-            )
-
-            password = st.text_input(
-                "",
-                type="password",
-                placeholder="Password",
-                label_visibility="collapsed"
-            )
+            username = st.text_input("", placeholder="User", label_visibility="collapsed")
+            password = st.text_input("", type="password", placeholder="Password", label_visibility="collapsed")
 
             submitted = st.form_submit_button("Login", use_container_width=True)
 
@@ -92,7 +73,70 @@ def login_screen():
 
 
 # ---------------------------------------------------
-# MAIN APP (MENU RESTORED)
+# PINWHEEL DIAGRAM FUNCTION
+# ---------------------------------------------------
+def render_pinwheel_diagram():
+
+    st.subheader("Pinwheel Integration Flow")
+
+    mermaid_code = """
+    flowchart LR
+
+        User --> FE["Veep FE"]
+        FE --> PW_Widget["Pinwheel Widget"]
+        PW_Widget --> PW_API["Pinwheel API"]
+
+        PW_API --> BE["Veep Backend"]
+
+        BE --> Enrich["Member Enrichment"]
+        Enrich --> Dest["Create Destination Account"]
+
+        Dest --> Model["ModelShop Eligibility Refresh"]
+        Model --> FE
+
+        PW_API -->|Employer Not Found| Edge["Edge Case Handling (Phase 2)"]
+    """
+
+    st.markdown(
+        f"""
+        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+        <div class="mermaid">
+        {mermaid_code}
+        </div>
+        <script>
+            mermaid.initialize({{ startOnLoad: true }});
+        </script>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown("---")
+
+    st.markdown("### Flow Explanation")
+
+    st.markdown("""
+    **1. User initiates account linking in FE**  
+    → Pinwheel widget loads.
+
+    **2. Pinwheel verifies employer & income**  
+    → Returns structured payroll data.
+
+    **3. Backend receives Pinwheel payload**  
+    → Member enrichment logic executes.
+
+    **4. Destination account created**  
+    → Account stored for EWA disbursement.
+
+    **5. Eligibility refresh triggered in ModelShop**  
+    → Updated offer availability.
+
+    **6. Edge Case: Employer Not Found**  
+    → Phase 2 decision logic required.
+    """)
+
+
+# ---------------------------------------------------
+# MAIN APP
 # ---------------------------------------------------
 def main_app():
 
@@ -113,40 +157,9 @@ def main_app():
 
     with tabs[0]:
         st.title("FI Overview")
-        st.write("High-level architecture and scope summary.")
-
-    with tabs[1]:
-        st.title("EWA Request Flow")
-
-    with tabs[2]:
-        st.title("Eligibility & Model")
-
-    with tabs[3]:
-        st.title("Advance Creation")
 
     with tabs[4]:
-        st.title("Pinwheel Integration")
-
-    with tabs[5]:
-        st.title("Connective (Kinective)")
-
-    with tabs[6]:
-        st.title("Q2 Widget")
-
-    with tabs[7]:
-        st.title("Nudge Integration")
-
-    with tabs[8]:
-        st.title("Repayment – No Funds")
-
-    with tabs[9]:
-        st.title("Repayment – Uncollectable")
-
-    with tabs[10]:
-        st.title("Employer Not Found")
-
-    with tabs[11]:
-        st.title("Full FI Architecture")
+        render_pinwheel_diagram()
 
 
 # ---------------------------------------------------
