@@ -26,7 +26,6 @@ def render():
     # =====================================================
     # INFO SECTION
     # =====================================================
-
     st.markdown("### What Pinwheel Enables")
 
     col1, col2, col3 = st.columns(3)
@@ -77,7 +76,7 @@ flowchart LR
     User --> FE --> Widget --> Employer --> Auth --> Income --> Linked --> Final
 """
 
-    render_mermaid(happy_flow, height=260)
+    render_mermaid(happy_flow)
 
     # =====================================================
     # 2️⃣ EXIT FLOW
@@ -100,7 +99,7 @@ flowchart LR
     User --> FE --> Widget --> Exit --> Dashboard --> Tier
 """
 
-    render_mermaid(exit_flow, height=230)
+    render_mermaid(exit_flow)
 
     # =====================================================
     # 3️⃣ SEQUENCE DIAGRAM
@@ -136,13 +135,13 @@ sequenceDiagram
     end
 """
 
-    render_mermaid(sequence, height=600)
+    render_mermaid(sequence)
 
 
 # --------------------------------------------------
-# CLEAN MERMAID RENDERER
+# MERMAID RENDERER (AUTO HEIGHT — NO FIXED SPACE)
 # --------------------------------------------------
-def render_mermaid(code: str, height: int):
+def render_mermaid(code: str):
 
     components.html(
         f"""
@@ -151,9 +150,10 @@ def render_mermaid(code: str, height: int):
             border-radius:10px;
             padding:16px;
             background:#ffffff;
-            margin-bottom:16px;
+            margin-bottom:12px;
         ">
             <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
             <div class="mermaid">
             %%{{init: {{ 'theme': 'base', 'themeVariables': {{
                 'primaryColor': '#f3f4f6',
@@ -170,6 +170,5 @@ def render_mermaid(code: str, height: int):
             mermaid.initialize({{ startOnLoad: true }});
         </script>
         """,
-        height=height,
-        scrolling=False
+        scrolling=True
     )
