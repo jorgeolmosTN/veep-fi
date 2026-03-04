@@ -1,6 +1,6 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
+st.set_page_config(layout="wide")
 
 # ---------------------------------------------------
 # INIT STATE
@@ -10,67 +10,37 @@ if "pinwheel_view" not in st.session_state:
 
 
 # ---------------------------------------------------
-# NAVIGATION (FLOW SELECTOR)
+# NAVIGATION
 # ---------------------------------------------------
-def render_navigation():
+st.title("Pinwheel Integration – Visual Flows")
 
-    col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 
-    with col1:
-        if st.button("Flow 1 – Opt In Journey", use_container_width=True):
-            st.session_state.pinwheel_view = "flow1"
+with col1:
+    if st.button("Flow 1 – Opt In Journey", use_container_width=True):
+        st.session_state.pinwheel_view = "flow1"
 
-    with col2:
-        if st.button("Flow 2 – Future State", use_container_width=True):
-            st.session_state.pinwheel_view = "flow2"
+with col2:
+    if st.button("Future / Edge Cases", use_container_width=True):
+        st.session_state.pinwheel_view = "future"
 
-    with col3:
-        if st.button("Edge Cases", use_container_width=True):
-            st.session_state.pinwheel_view = "edge"
+st.markdown("---")
 
 
 # ---------------------------------------------------
-# EMBED DIAGRAM
+# RENDER FLOWS
 # ---------------------------------------------------
-def embed_lucid_chart(embed_url):
-    components.iframe(
-        embed_url,
-        height=900,
-        scrolling=True
+if st.session_state.pinwheel_view == "flow1":
+
+    st.subheader("Flow 1 – Pinwheel Opt-In Journey")
+
+    st.image(
+        "https://lucid.app/publicSegments/view/c49e1371-91bf-4804-8725-ef9f29bf5614/image.png",
+        use_container_width=True
     )
 
+elif st.session_state.pinwheel_view == "future":
 
-# ---------------------------------------------------
-# MAIN RENDER
-# ---------------------------------------------------
-def render():
+    st.subheader("Future / Alternative Flow")
 
-    st.title("Pinwheel Integration – Visual Flows")
-
-    render_navigation()
-
-    st.markdown("---")
-
-    # 🔵 FLOW 1
-    if st.session_state.pinwheel_view == "flow1":
-        st.subheader("Flow 1 – Pinwheel Opt-In Journey")
-
-        embed_lucid_chart(
-            "PASTE_YOUR_EMBED_LINK_HERE"
-        )
-
-    # 🟢 FLOW 2
-    elif st.session_state.pinwheel_view == "flow2":
-        st.subheader("Flow 2 – Future / Alternative Flow")
-
-        embed_lucid_chart(
-            "PASTE_FLOW2_EMBED_LINK_HERE"
-        )
-
-    # 🟡 EDGE CASES
-    elif st.session_state.pinwheel_view == "edge":
-        st.subheader("Edge Cases & Error Handling")
-
-        embed_lucid_chart(
-            "PASTE_EDGE_CASE_EMBED_LINK_HERE"
-        )
+    st.info("Upload or publish the second flow PNG and paste the URL here.")
