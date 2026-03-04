@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 def render():
 
     # --------------------------------------------------
-    # GLOBAL PAGE COMPACT STYLING
+    # GLOBAL COMPACT STYLING
     # --------------------------------------------------
     st.markdown("""
     <style>
@@ -16,29 +16,22 @@ def render():
         padding-bottom: 0.5rem !important;
     }
 
-    h3 {
-        margin-top: 8px !important;
-        margin-bottom: 8px !important;
-    }
-
-    p {
-        margin-bottom: 6px !important;
-    }
+    h1 { margin-bottom: 10px !important; }
+    h3 { margin-top: 6px !important; margin-bottom: 6px !important; }
 
     .section-frame {
         border: 1px solid #dcdcdc;
         border-radius: 10px;
-        padding: 18px 22px;
-        margin-bottom: 14px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
         background-color: #ffffff;
     }
 
     .diagram-box {
         border: 1px solid #e5e5e5;
         border-radius: 8px;
-        padding: 12px;
+        padding: 10px;
         background-color: #fafafa;
-        margin-top: 8px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -46,14 +39,14 @@ def render():
     st.title("Pinwheel Integration")
 
     # =====================================================
-    # TOP INFO CARD
+    # INFO CARD
     # =====================================================
     st.markdown("""
     <div class="section-frame">
-        <div style="font-size:16px; font-weight:600; margin-bottom:8px;">
+        <div style="font-size:15px; font-weight:600; margin-bottom:8px;">
             What Pinwheel Enables
         </div>
-        <div style="display:flex; gap:30px; flex-wrap:wrap; font-size:14px;">
+        <div style="display:flex; gap:28px; flex-wrap:wrap; font-size:13px;">
             <div>🏢 Employer Verification</div>
             <div>💰 Income Validation</div>
             <div>🧩 Member Enrichment</div>
@@ -81,7 +74,7 @@ flowchart LR
     Linked --> Eligible["Eligibility Recalculated"]
 """
 
-    render_mermaid(user_flow, height=300)
+    render_mermaid(user_flow, 280)
     st.markdown('</div>', unsafe_allow_html=True)
 
     # =====================================================
@@ -98,7 +91,7 @@ flowchart LR
     Dashboard --> Tier["Tier Reduction in Risk Score"]
 """
 
-    render_mermaid(exit_flow, height=240)
+    render_mermaid(exit_flow, 220)
     st.markdown('</div>', unsafe_allow_html=True)
 
     # =====================================================
@@ -136,12 +129,12 @@ sequenceDiagram
     end
 """
 
-    render_mermaid(sequence_diagram, height=420)
+    render_mermaid(sequence_diagram, 380)
     st.markdown('</div>', unsafe_allow_html=True)
 
 
 # --------------------------------------------------
-# MERMAID RENDERER
+# MERMAID RENDERER (Compact)
 # --------------------------------------------------
 def render_mermaid(code: str, height: int):
     components.html(
@@ -157,4 +150,5 @@ mermaid.initialize({{ startOnLoad: true }});
 </script>
         """,
         height=height,
+        scrolling=False,
     )
